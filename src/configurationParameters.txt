@@ -1,0 +1,7 @@
+# Comment: everything after # should be disregarded by the parser
+mission     --m       categorical   ('foraging','agg','dg')    | NA
+expLength   --el      ordinal       (60,90,120,150,180)      | NA
+robots      --r       integer       (15,25)                     | NA
+initPosit   --ip      categorical   ('area','fixed')            | NA
+initOrient  --io      categorical   ('uniform','fixed')         | NA
+floorCol    --fc      categorical   ('white','black','gray')   | NA
