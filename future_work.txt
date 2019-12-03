@@ -1,0 +1,82 @@
+PatchFor3--------
+[ PLAN ]
+--------
+
+So far ...
+
+Miquel's code parses a string of parameters and transforms it into an
+input for Darko's code. This input is a high level description of the
+environment and of the objective function. Darko's code generates a
+loop_function and a configuration file (.argos).
+
+
+Current idea:
+
+Create a generator of strings to give to Miquel's code, which then
+gives it to Darko's code. Ultimately, everything can be combined into
+one code, and removing the translation of the string of parameters to
+the high level language of Darko.
+
+The generator of strings of parameters will resemble the one used in
+IRACE. It will take a file of parameters description as input. These
+parameters description will include the range of values that can be
+taken, and conditions (logical expressions) to create relations
+between parameters. The generator will simply sample the values for
+the parameters that meet the conditions.
+
+Example:
+<name>    <label>   <type>        <range>                       <conditions>
+mission   --m       categorical   ('foraging', 'agg', 'dg')     NA
+expLength --el      ordinal       (60, 90, 120, 150, 180)       NA
+robots    --r       integer       (15, 25)                      NA
+initPosit --ip      categorical   ('area', 'fixed')             NA
+initOrient --io     categorical   ('uniform', 'fixed')          NA
+floorCol   --fc     categorical   ('white', 'black', 'gray')    NA
+
+
+Currently, for the reference model RM1.1/2, all the missions that we
+liked can be categorized into three classes: foraging, aggregation,
+and directional gate.
+
+In order for the generated missions to be meaningful, conditions need
+to be a bit more complex that the ones of IRACE. For example, in a
+foraging mission, at least two patches of different colors need to be
+instantiated in the environment: one for the nest, one for the food
+source. Also, if obstacles are instantiated, they should allow for a
+clear path between the nest and the food source. The generator itself
+needs to incorporate these predefined conditions, maybe in classes
+dedicated to the missions.
+
+Example:
+<name>             <label>      <type>             <range>                  <conditions>
+nPatchesFor        --npf        integer            (2, 3)                   mission == 'foraging'
+nPatchesAgg        --npa        integer            (0, 3)                   mission == 'agg'
+nPatchesDg         --npdg       integer            ?                        mission == 'dg'
+
+## Foraging
+typePatchFor1      --tpf1       categorical       ('circ', 'rect')            nPatchesFor > 0
+dimPatchFor1       --dpf1       real              (0.2, 0.6)                  nPatchesFor > 0
+posPatchFor1       --ppf1       categorical       {'unif'}                    nPatchesFor > 0
+rangeXPatchFor1    --rxpf1      real              (-1.0, 1.0)                 posPatchFor1 == 'unif'
+rangeYPatchFor1    --rypf1      real              (-1.0, 1.0)                 posPatchFor1 == 'unif'
+centerXPatchFor1   --cxpf1      real              function()                  randomly sample X and Y + checkOverlap
+centerYPatchFor1   --cypf1      real              function()
+colorPatchFor1     --cpf1       categorical       {'w', 'g', 'b'} - floorCol  nPatchesFor > 0
+
+typePatchFor2      --tpf2       categorical       ('circ', 'rect')            nPatchesFor > 1
+dimPatchFor2       --dpf2       real              (0.2, 0.6)                  nPatchesFor > 1
+posPatchFor2       --ppf2       categorical       {'unif', 'relation'}        nPatchesFor > 1
+relPatchFor2       --rpf2       categorical       {1}                         #index of patch to be in relation with.
+rangeXPatchFor2    --rxpf2      real              (-1.0, 1.0)                 posPatchFor2 == 'unif'
+rangeYPatchFor2    --rypf2      real              (-1.0, 1.0)                 posPatchFor2 == 'unif'
+distPatchFor2      --dpf2      real               (0.0, 0.6)                  posPatchFor2 == 'relation'
+centerXPatchFor2   --cxpf2      real              function()                  if posPatchFor2 == 'unif', randomly sample X and Y + checkOverlap
+                                                                                 posPatchFor2 == 'relation', sample X and Y so that + checkOverlap
+centerYPatchFor2   --cypf2      real              function()
+colorPatchFor2     --cpf2       categorical       {'w', 'g', 'b'} - floorCol  nPatchesFor > 1 AND if nPatchesFor==2, colorPatchFor2 != colorPatchFor1
+
+
+
+nObstacles    --no      integer     (0, 5)             NA
+obstacle0     --o0      real        (0.05, 0.80)       nObstacles > 0
+distObs0      --dist0   categorical ('random', 'side') nObstacles > 0, side iff at least one rectangular patch exists
