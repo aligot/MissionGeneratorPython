@@ -1,7 +1,31 @@
 # Comment: everything after # should be disregarded by the parser
-mission     --m       categorical   ('foraging','agg','dg')    | NA
-expLength   --el      ordinal       (60,90,120,150,180)      | NA
+mission     --m       categorical   ('for','agg','dg')    | NA
+expLength   --el      categorical   (60,90,120,150,180)      | NA
 robots      --r       integer       (15,25)                     | NA
-initPosit   --ip      categorical   ('area','fixed')            | NA
-initOrient  --io      categorical   ('uniform','fixed')         | NA
-floorCol    --fc      categorical   ('white','black','gray')   | NA
+floorCol    --fc      categorical   ('gray')   | NA
+arenaSide   --as      real          (0.66,0.66)                  | NA
+initOrient  --io      categorical   ('uniform')         | NA
+initPosit   --ip      categorical   ('area','all')            | NA
+### Foraging
+nPatchesFor        --npf        integer           (2,3)                  | mission == 'for'
+typePatchFor1      --tpf1       categorical       ('circ','rect')        | nPatchesFor > 0
+colorPatchFor1     --cpf1       categorical       ('white','black')         | nPatchesFor > 0
+dimPatchFor1       --dpf1       real              (0.2,0.6)              | nPatchesFor > 0
+posPatchFor1       --ppf1       categorical       ('unif')                | nPatchesFor > 0
+centerXPatchFor1    --cxpf1     real              (-1.0,1.0)             | posPatchFor1 == 'unif'
+centerYPatchFor1    --cypf1     real              (-1.0,1.0)             | posPatchFor1 == 'unif'
+typePatchFor2      --tpf2       categorical       ('circ', 'rect')          | nPatchesFor > 1
+colorPatchFor2     --cpf2       function          SelectColor()              | nPatchesFor > 1
+dimPatchFor2       --dpf2       real              (0.2, 0.6)               | nPatchesFor > 1
+posPatchFor2       --ppf2       categorical       {'unif', 'relation'}     | nPatchesFor > 1
+relPatchFor2       --rpf2       categorical       {1}                        | nPatchesFor > 1
+rangeXPatchFor2    --rxpf2      real              (-1.0, 1.0)                | posPatchFor2 == 'unif'
+rangeYPatchFor2    --rypf2      real              (-1.0, 1.0)                | posPatchFor2 == 'unif'
+distPatchFor2      --dpf2       real              (0.0, 0.6)                 | posPatchFor2 == 'relation'
+centerXPatchFor2   --cxpf2      function          PositionPatch()            | posPatchFor2 == 'relation'
+centerYPatchFor2   --cypf2      function          PositionPatch()            | posPatchFor2 == 'relation'
+centerXPatchFor2   --cxpf2      real              (-1.0, 1.0)                | posPatchFor2 == 'unif'
+centerYPatchFor2   --cypf2      real              (-1.0, 1.0)                | posPatchFor2 == 'unif'
+### Aggregation
+nPatchesAgg        --npa        integer            (0,3)                 |  mission == 'agg'
+nPatchesDg         --npdg       integer            (2,3)                      |  mission == 'dg'
