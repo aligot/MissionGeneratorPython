@@ -57,6 +57,12 @@ class Generator:
                 missionType = variable.Range
             if missionType == "for":
                 mission = Foraging()
+            elif missionType == "agg":
+                print("Not implemented yet")
+                exit(1)
+            elif missionType == "dg":
+                print("Not implemented yet")
+                exit(1)
         else:
             print("Error: variable type for mission should be 'categorical'")
             exit(2)
