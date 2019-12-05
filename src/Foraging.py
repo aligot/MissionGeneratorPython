@@ -1,6 +1,7 @@
 # coding: utf-8
 
+from Mission import Mission
 
-class Foragin(Mission):
 
-    
+class Foraging(Mission):
+    pass

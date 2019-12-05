@@ -1,7 +1,5 @@
 # coding: utf-8
 
-import re
-
 
 class ConfigurationVariable:
 
@@ -9,7 +7,8 @@ class ConfigurationVariable:
         self.Name = name
         self.Label = label
         self.Type = type
-        self.Range = eval(range)     # list of strings
+        # Range is a list of strings if range or string if function
+        self.Range = eval(range) if self.Type != 'function' else range
         self.Condition = condition   # list of different conditions
 
     def __str__(self):
