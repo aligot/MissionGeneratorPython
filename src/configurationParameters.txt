@@ -1,11 +1,12 @@
 # Comment: everything after # should be disregarded by the parser
-mission     --m       categorical   ('for','agg','dg')    | NA
-expLength   --el      categorical   (60,90,120,150,180)      | NA
-robots      --r       integer       (15,25)                     | NA
-floorCol    --fc      categorical   ('gray')   | NA
-arenaSide   --as      real          (0.66,0.66)                  | NA
-initOrient  --io      categorical   ('uniform')         | NA
-initPosit   --ip      categorical   ('area','all')            | NA
+mission         --m       categorical   ('for','agg','dg')    | NA
+expLength       --el      categorical   (60,90,120,150,180)      | NA
+robots          --r       integer       (15,25)                     | NA
+arenaSide       --asi     real          (0.66,0.66)                  | NA
+arenaShape      --ash     categorical   ('dodeca','square')         | NA
+arenaFloorCol   --afc      categorical   ('gray')   | NA
+initOrient      --io      categorical   ('uniform')         | NA
+initPosit       --ip      categorical   ('area','all')            | NA
 ### Foraging
 nPatchesFor        --npf        integer           (2,3)                  | mission == 'for'
 typePatchFor1      --tpf1       categorical       ('circ','rect')        | nPatchesFor > 0

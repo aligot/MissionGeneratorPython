@@ -1,6 +1,7 @@
 # coding: utf-8
 
 from collections import OrderedDict
+from Arena import Arena
 
 
 class Mission:
@@ -20,3 +21,10 @@ class Mission:
     def PrintDictionary(self):
         for key, value in self.DicVariables.items():
             print(key, ':', value)
+
+    def SetArena(self, arena):
+        self.Arena = arena
+
+    # Checks wether object is in the arena or not
+    def CheckInArena(self):
+        pass

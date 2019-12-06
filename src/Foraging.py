@@ -4,4 +4,9 @@ from Mission import Mission
 
 
 class Foraging(Mission):
-    pass
+
+    def SelectColor(self):
+        pass
+
+    def GetColorsExistingPatch(self):
+        pass

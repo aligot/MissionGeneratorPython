@@ -7,11 +7,11 @@ class EnvironmentalObject(abc.ABC):
 
     @property
     def _get_position(self):
-        return self.position
+        return self.Center
 
     @property
     def _set_position(self, position):
-        self.position = position
+        self.Center = position
 
     @property
     @abc.abstractproperty
