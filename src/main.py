@@ -23,9 +23,4 @@ if __name__ == "__main__":
     missionGenerator = Generator(listConfigurationParameters)
     missionGenerator.Sample()
 
-    positionPatch = Vector3(1, 1.2, 0)
-    firstPatch = Patch(0, 'circ', positionPatch, 0.2, 'black')
-
-    # print(firstPatch.low_level_desciption)
-
     sys.exit(1)

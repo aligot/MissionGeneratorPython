@@ -8,6 +8,7 @@ class Mission:
 
     def __init__(self):
         self.DicVariables = OrderedDict()
+        self.ListObjects = []
 
     def AddVariable(self, key, value):
         self.DicVariables[key] = value
@@ -25,6 +26,9 @@ class Mission:
     def SetArena(self, arena):
         self.Arena = arena
 
-    # Checks wether object is in the arena or not
-    def CheckInArena(self):
+    def AddPatch(self, patch):
+        # The position of the patch needs to be specified.
+        pass
+
+    def GetPossiblePatchColors(self):
         pass

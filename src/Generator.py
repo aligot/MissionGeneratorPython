@@ -45,8 +45,6 @@ class Generator:
                     return True if self.Mission.IsGreaterThan(key, value) else False
 
     def InitializeVariable(self, variable):
-        if re.findall('Patch', variable.Name):
-            pass
         if variable.Type == 'categorical':
             if type(variable.Range) is tuple:
                 self.Mission.AddVariable(variable.Name, random.choice(variable.Range))
@@ -57,8 +55,6 @@ class Generator:
         elif variable.Type == 'real':
             value = Decimal(random.uniform(variable.Range[0], variable.Range[1]))
             self.Mission.AddVariable(variable.Name, float(round(value, 2)))
-        elif variable.Type == 'function':
-            pass
 
     def HandleMission(self):
         missionVariable = self.ConfigurationVariables[0]
@@ -94,9 +90,20 @@ class Generator:
         print("------ Patch {} ------".format(index))
         if self.IsConditionRespected(patch_variables[0]):
             currentPatch = Patch()
-        for variable in patch_variables[1:]:
-            print(variable.Name, self.IsConditionRespected(variable))
-
+            for variable in patch_variables[1:]:
+                if self.IsConditionRespected(variable):
+                    if 'type' in variable.Name:
+                        currentPatch.Type = self.SampleVariable(variable)
+                    elif 'color' in variable.Name:
+                        if variable.Range != 'SelectColor()':
+                            currentPatch.Color = self.SampleVariable(variable)
+                        else:
+                            currentPatch.Color = self.SamplePossibleValues(variable, self.Mission.GetPossiblePatchColors())
+                    elif 'dim' in variable.Name:
+                        currentPatch.Size = self.SampleVariable(variable)
+                    elif 'dist' in variable.Name:
+                        currentPatch.Distribution = self.SampleVariable(variable)
+            self.Mission.AddPatch(currentPatch)
         for variable in patch_variables:
             self.ConfigurationVariables.remove(variable)
 
@@ -111,3 +118,9 @@ class Generator:
         elif variable.Type == 'real':
             value = Decimal(random.uniform(variable.Range[0], variable.Range[1]))
             return(float(round(value, 2)))
+
+    def SamplePossibleValues(self, variable, possible_values):
+        if type(possible_values) is tuple:
+            return(random.choice(possible_values))
+        else:
+            return(possible_values)
