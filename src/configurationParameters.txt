@@ -1,5 +1,5 @@
 # Comment: everything after # should be disregarded by the parser
-mission         --m       categorical   ('for','agg','dg')    | NA
+mission         --m       categorical   ('for')    | NA
 expLength       --el      categorical   (60,90,120,150,180)      | NA
 robots          --r       integer       (15,25)                     | NA
 arenaSide       --asi     real          (0.66,0.66)                  | NA
@@ -9,15 +9,20 @@ initOrient      --io      categorical   ('uniform')         | NA
 initPosit       --ip      categorical   ('area','all')            | NA
 ### Foraging
 nPatchesFor        --npf        integer           (2,3)                  | mission == 'for'
-typePatchFor1      --tpf1       categorical       ('circ','rect')        | nPatchesFor > 0
-colorPatchFor1     --cpf1       categorical       ('white','black')         | nPatchesFor > 0
-dimPatchFor1       --dpf1       real              (0.2,0.6)              | nPatchesFor > 0
-distPatchFor1       --dispf1    categorical    ('unif')                | nPatchesFor > 0
-typePatchFor2      --tpf2       categorical       ('circ','rect')          | nPatchesFor > 1
-colorPatchFor2     --cpf2       function          SelectColor()              | nPatchesFor > 1
-dimPatchFor2       --dpf2       real              (0.2,0.6)               | nPatchesFor > 1
-distPatchFor2       --dispf2       categorical       ('unif','relation')     | nPatchesFor > 1
-relPatchFor2       --rpf2       categorical       (1)                        | nPatchesFor > 1
+typePatchFor0      --tpf0      categorical        ('circ','rect')        | nPatchesFor > 0
+colorPatchFor0     --cpf0       categorical       ('white','black')      | nPatchesFor > 0
+dimPatchFor0       --dpf0       real              (0.2,0.6)              | nPatchesFor > 0
+distPatchFor0       --dispf0    categorical       ('unif')               | nPatchesFor > 0
+typePatchFor1      --tpf1       categorical       ('circ','rect')        | nPatchesFor > 1
+colorPatchFor1     --cpf1       function          SelectColor()          | nPatchesFor > 1
+dimPatchFor1       --dpf1       real              (0.2,0.6)              | nPatchesFor > 1
+distPatchFor1      --dispf1     categorical       ('unif','relation')    | nPatchesFor > 1
+sepPatchFor1       --spf1       real              (0.0,0.5)              | posPatchFor1 == 'relation'
+typePatchFor2      --tpf2       categorical       ('circ','rect')        | nPatchesFor > 2
+colorPatchFor2     --cpf2       function          SelectColor()              | nPatchesFor > 2
+dimPatchFor2       --dpf2       real              (0.2,0.6)               | nPatchesFor > 2
+distPatchFor2       --dispf2       categorical       ('unif','relation')     | nPatchesFor > 2
+relPatchFor2       --rpf2       categorical       (1)                        | nPatchesFor > 2
 rangeXPatchFor2    --rxpf2      real              (-1.0,1.0)                | posPatchFor2 == 'unif'
 rangeYPatchFor2    --rypf2      real              (-1.0,1.0)                | posPatchFor2 == 'unif'
 distPatchFor2      --dpf2       real              (0.0,0.6)                 | posPatchFor2 == 'relation'
@@ -25,18 +30,6 @@ centerXPatchFor2   --cxpf2      function          PositionPatch()            | p
 centerYPatchFor2   --cypf2      function          PositionPatch()            | posPatchFor2 == 'relation'
 centerXPatchFor2   --cxpf2      real              (-1.0,1.0)                | posPatchFor2 == 'unif'
 centerYPatchFor2   --cypf2      real              (-1.0,1.0)                | posPatchFor2 == 'unif'
-typePatchFor3      --tpf3       categorical       ('circ','rect')          | nPatchesFor > 2
-colorPatchFor3     --cpf3       function          SelectColor()              | nPatchesFor > 2
-dimPatchFor3       --dpf3       real              (0.2,0.6)               | nPatchesFor > 2
-distPatchFor3       --dispf3       categorical       ('unif','relation')     | nPatchesFor > 2
-relPatchFor3       --rpf3       categorical       (1)                        | nPatchesFor > 2
-rangeXPatchFor3    --rxpf3      real              (-1.0,1.0)                | posPatchFor3 == 'unif'
-rangeYPatchFor3    --rypf3      real              (-1.0,1.0)                | posPatchFor3 == 'unif'
-distPatchFor3      --dpf3       real              (0.0,0.6)                 | posPatchFor3 == 'relation'
-centerXPatchFor3   --cxpf3      function          PositionPatch()            | posPatchFor3 == 'relation'
-centerYPatchFor3   --cypf3      function          PositionPatch()            | posPatchFor3 == 'relation'
-centerXPatchFor3   --cxpf3      real              (-1.0,1.0)                | posPatchFor3 == 'unif'
-centerYPatchFor3   --cypf3      real              (-1.0,1.0)                | posPatchFor3 == 'unif'
 ### Aggregation
 nPatchesAgg        --npa        integer            (0,3)                 |  mission == 'agg'
 nPatchesDg         --npdg       integer            (2,3)                      |  mission == 'dg'

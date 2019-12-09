@@ -8,7 +8,9 @@ class Mission:
 
     def __init__(self):
         self.DicVariables = OrderedDict()
-        self.ListObjects = []
+        self.ListPatches = []
+        self.ListObstacles = []
+        self.ListLights = []
 
     def AddVariable(self, key, value):
         self.DicVariables[key] = value
@@ -30,5 +32,8 @@ class Mission:
         # The position of the patch needs to be specified.
         pass
 
-    def GetPossiblePatchColors(self):
+    def GetPossiblePatchColors(self, index_variable):
         pass
+
+    def GetDescription(self):
+        print("Generic mission...")

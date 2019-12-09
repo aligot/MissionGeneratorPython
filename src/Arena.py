@@ -1,6 +1,7 @@
 # coding: utf-8
 
 import mpmath as mp
+from decimal import Decimal
 from Vector3 import Vector3, Distance
 from EnvironmentalObject import EnvironmentalObject
 
@@ -27,6 +28,8 @@ class Arena(EnvironmentalObject):
         if self.Shape == 'square':
             if (-self.SideLength/2 <= point.X <= self.SideLength/2) and (-self.SideLength/2 <= point.Y <= self.SideLength/2):
                 return True
+            else:
+                return False
         elif self.Shape == 'dodeca':
             nbSides = 12
             inradius = self.SideLength/2 * mp.cot(mp.pi/nbSides)
@@ -35,5 +38,17 @@ class Arena(EnvironmentalObject):
             else:
                 return False
 
-    def _get_low_level_desciption(self):
+    def GetMinMaxPositionValues(self):
+        minMaxValues = (0, 0)
+        if self.Shape == 'square':
+            minMaxValues = (-self.SideLength/2, self.SideLength/2)
+        elif self.Shape == 'dodeca':
+            nbSides = 12
+            inradius = float(round(Decimal(float(self.SideLength/2 * mp.cot(mp.pi/nbSides))), 2))
+            minMaxValues = (-inradius, inradius)
+        return(minMaxValues)
+
+    def _get_low_level_description(self):
         return("--asi {} --ash {} --afc {}".format(self.SideLength, self.Shape, self.FloorColor))
+
+    low_level_description = property(_get_low_level_description)

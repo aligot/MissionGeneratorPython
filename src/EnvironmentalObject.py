@@ -15,6 +15,6 @@ class EnvironmentalObject(abc.ABC):
 
     @property
     @abc.abstractproperty
-    def _get_low_level_desciption(self):
+    def _get_low_level_description(self):
         """ Implement me! """
         pass

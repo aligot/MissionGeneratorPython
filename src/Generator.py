@@ -59,7 +59,7 @@ class Generator:
     def HandleMission(self):
         missionVariable = self.ConfigurationVariables[0]
         self.ConfigurationVariables.remove(missionVariable)
-        mission = self.InitializeVariable(missionVariable)
+        mission = self.SampleVariable(missionVariable)
         if mission == "for":
             self.Mission = Foraging()
             self.Mission.AddVariable('mission', mission)
@@ -85,12 +85,14 @@ class Generator:
                 print("Error: unknown variable Arena variable name {}".format(variable.Name))
                 exit(2)
         self.Mission.SetArena(arena)
+        print(arena.low_level_description)
 
     def HandlePatch(self, patch_variables, index):
         print("------ Patch {} ------".format(index))
         if self.IsConditionRespected(patch_variables[0]):
             currentPatch = Patch()
-            for variable in patch_variables[1:]:
+            currentPatch.Index = index
+            for variable in patch_variables:
                 if self.IsConditionRespected(variable):
                     if 'type' in variable.Name:
                         currentPatch.Type = self.SampleVariable(variable)
@@ -98,11 +100,13 @@ class Generator:
                         if variable.Range != 'SelectColor()':
                             currentPatch.Color = self.SampleVariable(variable)
                         else:
-                            currentPatch.Color = self.SamplePossibleValues(variable, self.Mission.GetPossiblePatchColors())
+                            currentPatch.Color = self.SamplePossibleValues(variable, self.Mission.GetPossiblePatchColors(index))
                     elif 'dim' in variable.Name:
                         currentPatch.Size = self.SampleVariable(variable)
                     elif 'dist' in variable.Name:
                         currentPatch.Distribution = self.SampleVariable(variable)
+                    elif 'sep' in variable.Name:
+                        currentPatch.RelationDistance = self.SampleVariable(variable)
             self.Mission.AddPatch(currentPatch)
         for variable in patch_variables:
             self.ConfigurationVariables.remove(variable)
@@ -120,7 +124,7 @@ class Generator:
             return(float(round(value, 2)))
 
     def SamplePossibleValues(self, variable, possible_values):
-        if type(possible_values) is tuple:
+        if type(possible_values) is tuple or list:
             return(random.choice(possible_values))
         else:
             return(possible_values)
