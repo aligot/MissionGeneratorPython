@@ -21,6 +21,6 @@ if __name__ == "__main__":
     listConfigurationParameters = cConfigurationParser.parse()
 
     missionGenerator = Generator(listConfigurationParameters)
-    missionGenerator.Sample()
+    print(missionGenerator.Sample())
 
     sys.exit(1)

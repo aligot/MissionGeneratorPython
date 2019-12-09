@@ -30,7 +30,7 @@ class Generator:
             else:
                 if self.IsConditionRespected(variable):
                     self.InitializeVariable(variable)
-        self.Mission.PrintDictionary()
+        return self.Mission.GetDescription()
 
     def IsConditionRespected(self, variable):
         if variable.Condition[0] == 'NA':
@@ -43,6 +43,9 @@ class Generator:
                 elif re.findall('>', condition):
                     key, value = re.split('>', condition)
                     return True if self.Mission.IsGreaterThan(key, value) else False
+                elif re.findall('!=', condition):
+                    key, value = re.split('!=', condition)
+                    return True if self.Mission.IsDifferent(key, value) else False
 
     def InitializeVariable(self, variable):
         if variable.Type == 'categorical':
@@ -85,7 +88,6 @@ class Generator:
                 print("Error: unknown variable Arena variable name {}".format(variable.Name))
                 exit(2)
         self.Mission.SetArena(arena)
-        print(arena.low_level_description)
 
     def HandlePatch(self, patch_variables, index):
         print("------ Patch {} ------".format(index))

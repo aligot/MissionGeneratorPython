@@ -48,7 +48,5 @@ class Arena(EnvironmentalObject):
             minMaxValues = (-inradius, inradius)
         return(minMaxValues)
 
-    def _get_low_level_description(self):
+    def GetLowLevelDescription(self):
         return("--asi {} --ash {} --afc {}".format(self.SideLength, self.Shape, self.FloorColor))
-
-    low_level_description = property(_get_low_level_description)

@@ -19,17 +19,14 @@ dimPatchFor1       --dpf1       real              (0.2,0.6)              | nPatc
 distPatchFor1      --dispf1     categorical       ('unif','relation')    | nPatchesFor > 1
 sepPatchFor1       --spf1       real              (0.0,0.5)              | posPatchFor1 == 'relation'
 typePatchFor2      --tpf2       categorical       ('circ','rect')        | nPatchesFor > 2
-colorPatchFor2     --cpf2       function          SelectColor()              | nPatchesFor > 2
-dimPatchFor2       --dpf2       real              (0.2,0.6)               | nPatchesFor > 2
-distPatchFor2       --dispf2       categorical       ('unif','relation')     | nPatchesFor > 2
-relPatchFor2       --rpf2       categorical       (1)                        | nPatchesFor > 2
-rangeXPatchFor2    --rxpf2      real              (-1.0,1.0)                | posPatchFor2 == 'unif'
-rangeYPatchFor2    --rypf2      real              (-1.0,1.0)                | posPatchFor2 == 'unif'
-distPatchFor2      --dpf2       real              (0.0,0.6)                 | posPatchFor2 == 'relation'
-centerXPatchFor2   --cxpf2      function          PositionPatch()            | posPatchFor2 == 'relation'
-centerYPatchFor2   --cypf2      function          PositionPatch()            | posPatchFor2 == 'relation'
-centerXPatchFor2   --cxpf2      real              (-1.0,1.0)                | posPatchFor2 == 'unif'
-centerYPatchFor2   --cypf2      real              (-1.0,1.0)                | posPatchFor2 == 'unif'
+colorPatchFor2     --cpf2       function          SelectColor()          | nPatchesFor > 2
+dimPatchFor2       --dpf2       real              (0.2,0.6)              | nPatchesFor > 2
+distPatchFor2      --dispf2     categorical       ('unif','relation')    | nPatchesFor > 2
+sepPatchFor2       --spf2       real              (0.0,0.5)              | posPatchFor2 == 'relation'
 ### Aggregation
 nPatchesAgg        --npa        integer            (0,3)                 |  mission == 'agg'
-nPatchesDg         --npdg       integer            (2,3)                      |  mission == 'dg'
+### DirectionalGate
+nPatchesDg         --npdg       integer            (2,3)                 |  mission == 'dg'
+### Obstacles
+nObstacles        --no          integer            (0,5)                 | mission != 'dg'
+nObstacles        --no          integer            (3,5)                 | mission == 'dg'

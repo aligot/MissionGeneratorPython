@@ -10,15 +10,6 @@ class Vector3:
         self.Y = y
         self.Z = z
 
-    def _get_X(self):
-        return self.X
-
-    def _get_Y(self):
-        return self.Y
-
-    def _get_Z(self):
-        return self.Z
-
     def _get_length(self):
         return math.sqrt(self.SquareLength())
 

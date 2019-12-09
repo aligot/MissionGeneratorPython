@@ -12,9 +12,3 @@ class EnvironmentalObject(abc.ABC):
     @property
     def _set_position(self, position):
         self.Center = position
-
-    @property
-    @abc.abstractproperty
-    def _get_low_level_description(self):
-        """ Implement me! """
-        pass
