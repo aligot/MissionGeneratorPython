@@ -27,10 +27,17 @@ class Foraging(Mission):
     def AddPatch(self, patch):
         self.PositionPatch(patch)
         self.ListPatches.append(patch)
-        #print('New patch added!! Type: {}, color: {}, size: {}, position: {}'.format(patch.Type, patch.Color, patch.Size, patch.Position))
+
+    def TerminateInitialization(self):
+        possibleColors = ['white', 'gray', 'black']
+        possibleColors.remove(self.Arena.FloorColor)
+        self.ColorNest = self.DicVariables['colorNest']
+        possibleColors.remove(self.ColorNest)
+        self.ColorFoodSource = possibleColors[0]
 
     def GetDescription(self):
-        lowLevelDescription = "--m {} --el {} --r {} --io {} --ip {} --np {} ".format(self.DicVariables['mission'], self.DicVariables['expLength'], self.DicVariables['robots'], self.DicVariables['initOrient'], self.DicVariables['initPosit'], self.DicVariables['nPatchesFor'])
+        self.TerminateInitialization()
+        lowLevelDescription = "--m {} --el {} --r {} --io {} --ip {} --cnf {} --cfsf {}     --np {} ".format(self.DicVariables['mission'], self.DicVariables['expLength'], self.DicVariables['robots'], self.DicVariables['initOrient'], self.DicVariables['initPosit'], self.ColorNest, self.ColorFoodSource, self.DicVariables['nPatchesFor'])
         lowLevelDescription += self.Arena.GetLowLevelDescription() + ' '
         for patch in self.ListPatches:
             lowLevelDescription += patch.GetLowLevelDescription() + ' '

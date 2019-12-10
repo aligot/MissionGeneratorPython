@@ -3,7 +3,6 @@
 import random
 from decimal import Decimal
 from collections import OrderedDict
-from Arena import Arena
 from Vector3 import Vector3, Distance
 
 
@@ -43,7 +42,6 @@ class Mission:
 
     def GetDescription(self):
         print("Generic mission...")
-
 
     def PositionPatch(self, patch):
         numberTries = 0

@@ -8,6 +8,7 @@ arenaFloorCol   --afc      categorical   ('gray')   | NA
 initOrient      --io      categorical   ('uniform')         | NA
 initPosit       --ip      categorical   ('area','all')            | NA
 ### Foraging
+colorNest          --cnf        categorical       ('white','black')      | mission == 'for'
 nPatchesFor        --npf        integer           (2,3)                  | mission == 'for'
 typePatchFor0      --tpf0      categorical        ('circ','rect')        | nPatchesFor > 0
 colorPatchFor0     --cpf0       categorical       ('white','black')      | nPatchesFor > 0

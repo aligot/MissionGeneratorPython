@@ -3,8 +3,6 @@
 from __future__ import print_function
 from ConfigurationParser import ConfigurationParser
 from Generator import Generator
-from Vector3 import Vector3
-from Patch import Patch
 
 import sys
 import argparse

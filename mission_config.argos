@@ -13,7 +13,7 @@
   <!-- ****************** -->
   <loop_functions library="/home/aligot/Desktop/Arena/experiments-loop-functions/build/loop-functions/Repertoire/libSDBCLoopFunc.so"
    label="generic_loop_func">
-   <params dist_radius="1.2" number_robots="5" mission_description="--m for --el 90 --r 21 --io uniform --ip all --np 2 --asi 0.66 --ash dodeca --afc gray --tp0 rect --sp0 0.58 --cxp0 -0.82 --cyp0 -0.46 --cp0 black --tp1 circ --sp1 0.34 --cxp1 0.94 --cyp1 -0.47 --cp1 white"/>
+   <params dist_radius="1.2" number_robots="5" mission_description="--m for --el 150 --r 20 --io uniform --ip area --cnf white --cfsf black --np 3 --asi 0.66 --ash dodeca --afc gray --tp0 circ --sp0 0.33 --cxp0 -0.92 --cyp0 -0.51 --cp0 white --tp1 rect --sp1 0.42 --cxp1 -0.01 --cyp1 -0.51 --cp1 black --tp2 rect --sp2 0.51 --cxp2 -0.3 --cyp2 -0.3 --cp2 white"/>
   </loop_functions>
 
   <!-- *************** -->
@@ -21,7 +21,7 @@
   <!-- *************** -->
   <controllers>
 	<!-- TRANSMITTER -->
-    <automode_controller id="automode"
+    <!-- <automode_controller id="automode"
                         library="/home/aligot/Desktop/Arena/AutoMoDe-RM12/build/src/libautomode.so">
         <actuators>
           <epuck_wheels implementation="default" noise_std_dev="0.05"/>
@@ -35,8 +35,8 @@
           <epuck_ground implementation="rot_z_only" noise_level="0.05" calibrated="true"/>
           <epuck_omnidirectional_camera implementation="rot_z_only" medium="leds" show_rays="false"/>
         </sensors>
-      <params fsm-config="--nstates 1 --s0 0 --rwm0 2"/>
-    </automode_controller>
+      <params fsm-config="-nstates 1 -s0 0 -rwm0 2"/>
+    </automode_controller> -->
 
     <nn_rm_1dot1_controller id="nn_rm_1dot1_controller"
                         library="/home/aligot/Desktop/Arena/NEATvsEvo/NEAT/build/src/controllers/libnn_rm_1dot1.so">
