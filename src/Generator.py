@@ -3,10 +3,13 @@
 import re
 import random
 from decimal import Decimal
+from string import Template
+
 from Mission import Mission
 from Foraging import Foraging
 from Arena import Arena
 from Patch import Patch
+from Light import Light
 
 
 class Generator:
@@ -18,19 +21,33 @@ class Generator:
     def Sample(self):
         self.HandleMission()
         self.HandleArena()
-        for variable in self.ConfigurationVariables:
-            # print(variable)
+        while len(self.ConfigurationVariables) > 0:
+            variable = self.ConfigurationVariables[0]
             if "PatchFor" in variable.Name:
                 currentObjectIndex = int(re.findall(r'\d', variable.Name)[0])
                 currentObjectVariables = [x for x in self.ConfigurationVariables if (('PatchFor' in x.Name) and (int(re.findall(r'\d', x.Name)[0]) == currentObjectIndex))]
                 self.HandlePatch(currentObjectVariables, currentObjectIndex)
             elif "PatchAgg" in variable.Name:
                 pass
+            elif "light" in variable.Name:
+                currentObjectVariables = [x for x in self.ConfigurationVariables if ('light' in x.Name)]
+                self.HandleLight(currentObjectVariables)
             # Else: global variable that does not need specific treatment
             else:
                 if self.IsConditionRespected(variable):
                     self.InitializeVariable(variable)
-        return self.Mission.GetDescription()
+                self.ConfigurationVariables.remove(variable)
+        print(self.Mission.GetDescription())
+        self.WriteARGoSFile()
+
+    def WriteARGoSFile(self):
+        templateFile = open('../mission_config_template.argos')
+        sourceTemplateFile = Template(templateFile.read())
+        filledFile = sourceTemplateFile.substitute(missionDescription=self.Mission.GetDescription())
+
+        outputFile = open("../mission_config.argos", 'w')
+        outputFile.write(filledFile)
+        outputFile.close()
 
     def IsConditionRespected(self, variable):
         if variable.Condition[0] == 'NA':
@@ -77,7 +94,6 @@ class Generator:
         arena = Arena()
         arenaVariables = [x for x in self.ConfigurationVariables if re.findall('arena', x.Name)]
         for variable in arenaVariables:
-            self.ConfigurationVariables.remove(variable)
             if variable.Name == 'arenaSide':
                 arena.SetSideLength(self.SampleVariable(variable))
             elif variable.Name == 'arenaShape':
@@ -88,9 +104,10 @@ class Generator:
                 print("Error: unknown variable Arena variable name {}".format(variable.Name))
                 exit(2)
         self.Mission.SetArena(arena)
+        for variable in arenaVariables:
+            self.ConfigurationVariables.remove(variable)
 
     def HandlePatch(self, patch_variables, index):
-        print("------ Patch {} ------".format(index))
         if self.IsConditionRespected(patch_variables[0]):
             currentPatch = Patch()
             currentPatch.Index = index
@@ -111,6 +128,19 @@ class Generator:
                         currentPatch.RelationDistance = self.SampleVariable(variable)
             self.Mission.AddPatch(currentPatch)
         for variable in patch_variables:
+            self.ConfigurationVariables.remove(variable)
+
+    def HandleLight(self, light_variables):
+        light = Light()
+        for variable in light_variables:
+            if self.IsConditionRespected(variable):
+                if variable.Name == "light":
+                    light.Status = self.SampleVariable(variable)
+                    self.Mission.AddVariable(variable.Name, light.Status)
+                elif variable.Name == "lightPos":
+                    light.Position = self.SampleVariable(variable)
+        self.Mission.AddLight(light)
+        for variable in light_variables:
             self.ConfigurationVariables.remove(variable)
 
     def SampleVariable(self, variable):

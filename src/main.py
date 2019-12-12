@@ -6,7 +6,6 @@ from Generator import Generator
 
 import sys
 import argparse
-from string import Template
 
 
 cArgumentParser = argparse.ArgumentParser(description="Generator of missions")
@@ -20,15 +19,6 @@ if __name__ == "__main__":
     listConfigurationParameters = cConfigurationParser.parse()
 
     missionGenerator = Generator(listConfigurationParameters)
-    generatedMissionDescription = missionGenerator.Sample()
-    print(generatedMissionDescription)
-
-    templateFile = open('../mission_config_template.argos')
-    sourceTemplateFile = Template(templateFile.read())
-    filledFile = sourceTemplateFile.substitute(missionDescription=generatedMissionDescription)
-
-    outputFile = open("../mission_config.argos", 'w')
-    outputFile.write(filledFile)
-    outputFile.close()
+    missionGenerator.Sample()
 
     sys.exit(1)

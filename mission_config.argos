@@ -13,7 +13,7 @@
   <!-- ****************** -->
   <loop_functions library="/home/aligot/Desktop/Arena/experiments-loop-functions/build/loop-functions/Repertoire/libSDBCLoopFunc.so"
    label="generic_loop_func">
-   <params dist_radius="1.2" number_robots="5" mission_description="--m for --el 150 --r 15 --io uniform --ip area --cnf black --cfsf white --np 2 --asi 0.66 --ash dodeca --afc gray --tp0 circ --sp0 0.45 --cxp0 -0.73 --cyp0 0.23 --cp0 white --tp1 circ --sp1 0.46 --cxp1 -0.73 --cyp1 -0.74 --cp1 black "/>
+   <params dist_radius="1.2" number_robots="5" mission_description="--m for --el 180 --r 17 --io uniform --ip area --cnf black --cfsf white --np 2 --asi 0.66 --ash dodeca --afc gray --l on --pl north --tp0 circ --sp0 0.35 --cxp0 -0.28 --cyp0 0.88 --cp0 black --tp1 rect --sp1 0.36 --cxp1 -0.28 --cyp1 -0.67 --cp1 white "/>
   </loop_functions>
 
   <!-- *************** -->

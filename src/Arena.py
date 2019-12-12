@@ -49,4 +49,4 @@ class Arena(EnvironmentalObject):
         return(minMaxValues)
 
     def GetLowLevelDescription(self):
-        return("--asi {} --ash {} --afc {}".format(self.SideLength, self.Shape, self.FloorColor))
+        return("--asi {} --ash {} --afc {} ".format(self.SideLength, self.Shape, self.FloorColor))

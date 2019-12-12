@@ -33,6 +33,9 @@ class Mission:
     def SetArena(self, arena):
         self.Arena = arena
 
+    def AddLight(self, light):
+        self.ListLights.append(light)
+
     def AddPatch(self, patch):
         # The position of the patch needs to be specified.
         pass
@@ -93,7 +96,6 @@ class Mission:
             for patch in self.ListPatches:
                 minimalDistanceBetweenPatches = self.ComputeMinimalDistancesNeededToAvoidOverlap(current_patch, patch)
                 distBetweenPatches = Distance(positionCurrentPatch, patch.Position)
-                print(minimalDistanceBetweenPatches, distBetweenPatches)
                 if distBetweenPatches < minimalDistanceBetweenPatches:
                     intersecting = True
         return(intersecting)

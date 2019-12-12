@@ -7,13 +7,16 @@ arenaShape      --ash     categorical   ('dodeca','square')         | NA
 arenaFloorCol   --afc      categorical   ('gray')   | NA
 initOrient      --io      categorical   ('uniform')         | NA
 initPosit       --ip      categorical   ('area','all')            | NA
+light           --l       categorical   ('on','off')           | mission == 'for'
+light           --l       categorical   ('on','off')           | mission == 'agg'
+lightPos        --lp      categorical   ('north','east','south','west') | light == 'on'
 ### Foraging
 colorNest          --cnf        categorical       ('white','black')      | mission == 'for'
 nPatchesFor        --npf        integer           (2,3)                  | mission == 'for'
-typePatchFor0      --tpf0      categorical        ('circ','rect')        | nPatchesFor > 0
+typePatchFor0      --tpf0       categorical       ('circ','rect')        | nPatchesFor > 0
 colorPatchFor0     --cpf0       categorical       ('white','black')      | nPatchesFor > 0
 dimPatchFor0       --dpf0       real              (0.2,0.6)              | nPatchesFor > 0
-distPatchFor0       --dispf0    categorical       ('unif')               | nPatchesFor > 0
+distPatchFor0      --dispf0     categorical       ('unif')               | nPatchesFor > 0
 typePatchFor1      --tpf1       categorical       ('circ','rect')        | nPatchesFor > 1
 colorPatchFor1     --cpf1       function          SelectColor()          | nPatchesFor > 1
 dimPatchFor1       --dpf1       real              (0.2,0.6)              | nPatchesFor > 1

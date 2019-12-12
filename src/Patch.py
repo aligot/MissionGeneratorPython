@@ -15,4 +15,4 @@ class Patch(EnvironmentalObject):
         self.RelationDistance = None
 
     def GetLowLevelDescription(self):
-        return "--tp{0} {1} --sp{0} {2} --cxp{0} {3} --cyp{0} {4} --cp{0} {5}".format(self.Index, self.Type, self.Size, self.Position.X, self.Position.Y, self.Color)
+        return "--tp{0} {1} --sp{0} {2} --cxp{0} {3} --cyp{0} {4} --cp{0} {5} ".format(self.Index, self.Type, self.Size, self.Position.X, self.Position.Y, self.Color)
