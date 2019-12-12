@@ -87,17 +87,16 @@ class Mission:
             print("Error: distribution {} unknown!".format(patch.Distribution))
 
     def IsIntersectingWithOtherPatches(self, current_patch, pos_x, pos_y):
+        intersecting = False
         positionCurrentPatch = Vector3(pos_x, pos_y, 0)
         if len(self.ListPatches) > 0:
             for patch in self.ListPatches:
                 minimalDistanceBetweenPatches = self.ComputeMinimalDistancesNeededToAvoidOverlap(current_patch, patch)
                 distBetweenPatches = Distance(positionCurrentPatch, patch.Position)
-                if distBetweenPatches >= minimalDistanceBetweenPatches:
-                    return(False)
-                else:
-                    return(True)
-        else:
-            return(False)
+                print(minimalDistanceBetweenPatches, distBetweenPatches)
+                if distBetweenPatches < minimalDistanceBetweenPatches:
+                    intersecting = True
+        return(intersecting)
 
     def ComputeMinimalDistancesNeededToAvoidOverlap(self, patch1, patch2):
         minimalDistanceBetweenPatches = 0

@@ -37,7 +37,7 @@ class Foraging(Mission):
 
     def GetDescription(self):
         self.TerminateInitialization()
-        lowLevelDescription = "--m {} --el {} --r {} --io {} --ip {} --cnf {} --cfsf {}     --np {} ".format(self.DicVariables['mission'], self.DicVariables['expLength'], self.DicVariables['robots'], self.DicVariables['initOrient'], self.DicVariables['initPosit'], self.ColorNest, self.ColorFoodSource, self.DicVariables['nPatchesFor'])
+        lowLevelDescription = "--m {} --el {} --r {} --io {} --ip {} --cnf {} --cfsf {} --np {} ".format(self.DicVariables['mission'], self.DicVariables['expLength'], self.DicVariables['robots'], self.DicVariables['initOrient'], self.DicVariables['initPosit'], self.ColorNest, self.ColorFoodSource, self.DicVariables['nPatchesFor'])
         lowLevelDescription += self.Arena.GetLowLevelDescription() + ' '
         for patch in self.ListPatches:
             lowLevelDescription += patch.GetLowLevelDescription() + ' '
