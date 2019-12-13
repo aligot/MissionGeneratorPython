@@ -17,7 +17,7 @@ class Vector3:
         return math.pow(self.X, 2) + math.pow(self.Y, 2) + math.pow(self.Z, 2)
 
     def __str__(self):
-        return "< {}, {}, {} >".format(self.X, self.Y, self.Z)
+        return "{}, {}, {}".format(self.X, self.Y, self.Z)
 
     def __sub__(self, other):
         x = self.X - other.X

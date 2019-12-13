@@ -32,6 +32,7 @@ class Mission:
 
     def SetArena(self, arena):
         self.Arena = arena
+        arena.GenerateWalls()
 
     def AddLight(self, light):
         self.ListLights.append(light)
@@ -40,11 +41,24 @@ class Mission:
         # The position of the patch needs to be specified.
         pass
 
+    def AddObstacle(self, obstacle):
+        # The position of the patch needs to be specified.
+        pass
+
     def GetPossiblePatchColors(self, index_variable):
         pass
 
     def GetDescription(self):
         print("Generic mission...")
+
+    def GetLightsDescription(self):
+        lightsDesciption = ""
+        for light in self.ListLights:
+            lightsDesciption += light.GetARGoSDescription() + '\n'
+        return lightsDesciption
+
+    def GetArenaDescription(self):
+        return self.Arena.GetARGoSDescription()
 
     def PositionPatch(self, patch):
         numberTries = 0

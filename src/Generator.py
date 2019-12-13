@@ -10,6 +10,7 @@ from Foraging import Foraging
 from Arena import Arena
 from Patch import Patch
 from Light import Light
+from Box import Box
 
 
 class Generator:
@@ -24,14 +25,18 @@ class Generator:
         while len(self.ConfigurationVariables) > 0:
             variable = self.ConfigurationVariables[0]
             if "PatchFor" in variable.Name:
-                currentObjectIndex = int(re.findall(r'\d', variable.Name)[0])
-                currentObjectVariables = [x for x in self.ConfigurationVariables if (('PatchFor' in x.Name) and (int(re.findall(r'\d', x.Name)[0]) == currentObjectIndex))]
-                self.HandlePatch(currentObjectVariables, currentObjectIndex)
+                currentPatchIndex = int(re.findall(r'\d', variable.Name)[0])
+                currentPatchVariables = [x for x in self.ConfigurationVariables if (('PatchFor' in x.Name) and (int(re.findall(r'\d', x.Name)[0]) == currentPatchIndex))]
+                self.HandlePatch(currentPatchVariables, currentPatchIndex)
             elif "PatchAgg" in variable.Name:
                 pass
             elif "light" in variable.Name:
                 currentObjectVariables = [x for x in self.ConfigurationVariables if ('light' in x.Name)]
                 self.HandleLight(currentObjectVariables)
+            elif "Obs" in variable.Name and re.findall(r'\d', variable.Name):
+                currentObstacleIndex = int(re.findall(r'\d', variable.Name)[0])
+                currentObstacleVariables = [x for x in self.ConfigurationVariables if (('Obs' in x.Name) and (int(re.findall(r'\d', x.Name)[0]) == currentObstacleIndex))]
+                self.HandleObstacle(currentObstacleVariables, currentObstacleIndex)
             # Else: global variable that does not need specific treatment
             else:
                 if self.IsConditionRespected(variable):
@@ -43,7 +48,9 @@ class Generator:
     def WriteARGoSFile(self):
         templateFile = open('../mission_config_template.argos')
         sourceTemplateFile = Template(templateFile.read())
-        filledFile = sourceTemplateFile.substitute(missionDescription=self.Mission.GetDescription())
+        filledFile = sourceTemplateFile.substitute(missionDescription=self.Mission.GetDescription(), lightsDescription=self.Mission.GetLightsDescription(), arenaDescription=self.Mission.GetArenaDescription())
+
+        print(self.Mission.GetArenaDescription())
 
         outputFile = open("../mission_config.argos", 'w')
         outputFile.write(filledFile)
@@ -141,6 +148,24 @@ class Generator:
                     light.Position = self.SampleVariable(variable)
         self.Mission.AddLight(light)
         for variable in light_variables:
+            self.ConfigurationVariables.remove(variable)
+
+    def HandleObstacle(self, obst_variables, obst_index):
+        print("----- OBSTACLE {} ------".format(obst_index))
+        if (self.IsConditionRespected(obst_variables[0])):
+            for variable in obst_variables:
+                if self.IsConditionRespected(variable):
+                    currentObstacle = Box()
+                    currentObstacle.Type = "obstacle"
+                    currentObstacle.Index = obst_index
+                    if "size" in variable.Name:
+                        currentObstacle.Length = self.SampleVariable(variable)
+                    elif 'dist' in variable.Name:
+                        currentObstacle.Distribution = self.SampleVariable(variable)
+                    elif 'sep' in variable.Name:
+                        currentObstacle.RelationDistance = self.SampleVariable(variable)
+            self.Mission.AddObstacle(currentObstacle)
+        for variable in obst_variables:
             self.ConfigurationVariables.remove(variable)
 
     def SampleVariable(self, variable):

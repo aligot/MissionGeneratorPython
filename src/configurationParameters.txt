@@ -34,3 +34,17 @@ nPatchesDg         --npdg       integer            (2,3)                 |  miss
 ### Obstacles
 nObstacles        --no          integer            (0,5)                 | mission != 'dg'
 nObstacles        --no          integer            (3,5)                 | mission == 'dg'
+sizeObs0          --so0         real               (0.05,0.80)           | nObstacles > 0
+distObs0          --do0         categorical        ('unif')              | nObstacles > 0
+sizeObs1          --so1         real               (0.05,0.80)           | nObstacles > 1
+distObs1          --do1         categorical        ('unif','relation')   | nObstacles > 1
+sepObs1           --so1         real               (0.0,0.5)             | distObs1 == 'relation'
+sizeObs2          --so2         real               (0.05,0.80)           | nObstacles > 2
+distObs2          --do2         categorical        ('unif','relation')   | nObstacles > 2
+sepObs2           --so2         real               (0.0,0.5)             | distObs2 == 'relation'
+sizeObs3          --so3         real               (0.05,0.80)           | nObstacles > 3
+distObs3          --do3         categorical        ('unif','relation')   | nObstacles > 3
+sepObs3           --so3         real               (0.0,0.5)             | distObs3 == 'relation'
+sizeObs4          --so4         real               (0.05,0.80)           | nObstacles > 4
+distObs4          --do4         categorical        ('unif','relation')   | nObstacles > 4
+sepObs4           --so4         real               (0.0,0.5)             | distObs4 == 'relation'
