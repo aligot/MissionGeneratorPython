@@ -2,7 +2,7 @@
 mission         --m       categorical   ('for')    | NA
 expLength       --el      categorical   (60,90,120,150,180)      | NA
 robots          --r       integer       (15,25)                     | NA
-arenaShape      --ash     categorical   ('dodeca','square')         | NA
+arenaShape      --ash     categorical   ('dodeca','square')    (50,50)     | NA
 arenaSide       --asi     real          (0.66,0.66)                  | arenaShape == 'dodeca'
 arenaSide       --asi     real          (2.5,2.5)                  | arenaShape == 'square'
 arenaFloorCol   --afc      categorical   ('gray')   | NA

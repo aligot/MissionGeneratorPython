@@ -33,11 +33,16 @@ class ConfigurationParser:
             comment = re.findall("^#", strLine)
             if not(comment):
                 strLine = re.sub('\n', '', strLine)
+                name, label, type, range, distribution = 'NA', 'NA', 'NA', 'NA', 'NA'
                 strVariableDescription, strConditionDescription = re.split(r'\|', strLine)
                 strVariableDescription = re.sub(' +', ' ', strVariableDescription)
                 vecConditionDescription = re.split(',', re.sub(' +', '', strConditionDescription))
-                name, label, type, range = re.split(' ', strVariableDescription)[0:4]
-                cCurrentVariable = ConfigurationVariable(name, label, type, range, vecConditionDescription)
+                vecVariableDescription = re.split(' ', strVariableDescription)
+                if len(vecVariableDescription) == 4:
+                    name, label, type, range = re.split(' ', strVariableDescription)[0:4]
+                elif len(vecVariableDescription) == 5:
+                    name, label, type, range, distribution = re.split(' ', strVariableDescription)[0:5]
+                cCurrentVariable = ConfigurationVariable(name, label, type, range, distribution, vecConditionDescription)
                 self.m_listConfigurationVariable.append(cCurrentVariable)
         return self.m_listConfigurationVariable
 
