@@ -81,8 +81,11 @@
   <!-- Lights here -->
   $lightsDescription
 
-  <!-- Obstacles here -->
+  <!-- Arena here -->
   $arenaDescription
+
+  <!-- Obstacles here -->
+  $obstaclesDescription
 
   </arena>
 

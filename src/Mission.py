@@ -43,7 +43,8 @@ class Mission:
 
     def AddObstacle(self, obstacle):
         # The position of the patch needs to be specified.
-        pass
+        self.PositionObstacle(obstacle)
+        self.ListObstacles.append(obstacle)
 
     def GetPossiblePatchColors(self, index_variable):
         pass
@@ -59,6 +60,12 @@ class Mission:
 
     def GetArenaDescription(self):
         return self.Arena.GetARGoSDescription()
+
+    def GetObstaclesDescription(self):
+        obstaclesDescription = ""
+        for obstacle in self.ListObstacles:
+            obstaclesDescription += obstacle.GetARGoSDescription() + '\n'
+        return obstaclesDescription
 
     def PositionPatch(self, patch):
         numberTries = 0
@@ -102,6 +109,30 @@ class Mission:
                 exit(2)
         else:
             print("Error: distribution {} unknown!".format(patch.Distribution))
+
+    def PositionObstacle(self, obstacle):
+        numberTries = 0
+        boolPositioned = False
+        minMaxPositionValues = self.Arena.GetMinMaxPositionValues()
+        if obstacle.Distribution == 'unif':
+            while numberTries <= 100 and not(boolPositioned):
+                posX = float(round(Decimal(random.uniform(minMaxPositionValues[0], minMaxPositionValues[1])), 2))
+                posY = float(round(Decimal(random.uniform(minMaxPositionValues[0], minMaxPositionValues[1])), 2))
+                if self.Arena.IsObstacleInArena(obstacle, posX, posY):  # and not(self.IsBlockingSpace(obstacle, posX, posY)):
+                    boolPositioned = True
+                    obstacle.Position = Vector3(posX, posY, 0)
+                numberTries += 1
+            if not(boolPositioned):
+                print("Error: could not position patch #{}".format(obstacle.Index))
+                exit(2)
+        elif obstacle.Distribution == 'relation':
+            while numberTries <= 100 and not(boolPositioned):
+                numberTries += 1
+            if not(boolPositioned):
+                print("Error: could not position obstacle #{}".format(obstacle.Index))
+                exit(2)
+        else:
+            print("Error: distribution {} unknown!".format(obstacle.Distribution))
 
     def IsIntersectingWithOtherPatches(self, current_patch, pos_x, pos_y):
         intersecting = False

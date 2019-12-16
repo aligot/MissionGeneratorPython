@@ -2,8 +2,9 @@
 mission         --m       categorical   ('for')    | NA
 expLength       --el      categorical   (60,90,120,150,180)      | NA
 robots          --r       integer       (15,25)                     | NA
-arenaSide       --asi     real          (0.66,0.66)                  | NA
 arenaShape      --ash     categorical   ('dodeca','square')         | NA
+arenaSide       --asi     real          (0.66,0.66)                  | arenaShape == 'dodeca'
+arenaSide       --asi     real          (2.5,2.5)                  | arenaShape == 'square'
 arenaFloorCol   --afc      categorical   ('gray')   | NA
 initOrient      --io      categorical   ('uniform')         | NA
 initPosit       --ip      categorical   ('area','all')            | NA
@@ -35,16 +36,21 @@ nPatchesDg         --npdg       integer            (2,3)                 |  miss
 nObstacles        --no          integer            (0,5)                 | mission != 'dg'
 nObstacles        --no          integer            (3,5)                 | mission == 'dg'
 sizeObs0          --so0         real               (0.05,0.80)           | nObstacles > 0
+oriObs0           --oo0         categorical        (0,90)                | nObstacles > 0
 distObs0          --do0         categorical        ('unif')              | nObstacles > 0
 sizeObs1          --so1         real               (0.05,0.80)           | nObstacles > 1
+oriObs1           --oo1         categorical        (0,90)                | nObstacles > 1
 distObs1          --do1         categorical        ('unif','relation')   | nObstacles > 1
 sepObs1           --so1         real               (0.0,0.5)             | distObs1 == 'relation'
 sizeObs2          --so2         real               (0.05,0.80)           | nObstacles > 2
+oriObs2           --oo2         categorical        (0,90)                | nObstacles > 2
 distObs2          --do2         categorical        ('unif','relation')   | nObstacles > 2
 sepObs2           --so2         real               (0.0,0.5)             | distObs2 == 'relation'
 sizeObs3          --so3         real               (0.05,0.80)           | nObstacles > 3
+oriObs3           --oo3         categorical        (0,90)                | nObstacles > 3
 distObs3          --do3         categorical        ('unif','relation')   | nObstacles > 3
 sepObs3           --so3         real               (0.0,0.5)             | distObs3 == 'relation'
 sizeObs4          --so4         real               (0.05,0.80)           | nObstacles > 4
+oriObs4           --oo4         categorical        (0,90)                | nObstacles > 4
 distObs4          --do4         categorical        ('unif','relation')   | nObstacles > 4
 sepObs4           --so4         real               (0.0,0.5)             | distObs4 == 'relation'

@@ -25,6 +25,18 @@ class Vector3:
         z = self.Z - other.Z
         return Vector3(x, y, z)
 
+    def __add__(self, other):
+        x = self.X + other.X
+        y = self.Y + other.Y
+        z = self.Z + other.Z
+        return Vector3(x, y, z)
+
+    def __imul__(self, int):
+        x = self.X * int
+        y = self.Y * int
+        z = self.Z * int
+        return Vector3(x, y, z)
+
     length = property(_get_length)
 
 

@@ -1,6 +1,7 @@
 # coding: utf-8
 
 import mpmath as mp
+import copy
 from decimal import Decimal
 from Vector3 import Vector3, Distance
 from EnvironmentalObject import EnvironmentalObject
@@ -39,6 +40,15 @@ class Arena(EnvironmentalObject):
                 return True
             else:
                 return False
+
+    def IsObstacleInArena(self, obstacle, posX, posY):
+        tempObstacle = copy.deepcopy(obstacle)
+        tempObstacle.Position = Vector3(posX, posY, 0)
+        boolInArena = True
+        for corner in tempObstacle.GetBoundingBox():
+            if not(self.IsWithinArena(corner.X, corner.Y)):
+                boolInArena = False
+        return boolInArena
 
     def GetMinMaxPositionValues(self):
         minMaxValues = (0, 0)
@@ -81,7 +91,15 @@ class Arena(EnvironmentalObject):
             # North North East wall
             self.CreateWall(11, Vector3(apothem*cos30, -apothem*cos60, 0), -30)
         elif self.Shape == 'square':
-            pass
+            offset = self.SideLength/2
+            # South Wall
+            self.CreateWall(0, Vector3(-offset, 0, 0), 0)
+            # North Wall
+            self.CreateWall(1, Vector3(offset, 0, 0), 0)
+            # East Wall
+            self.CreateWall(2, Vector3(0, offset, 0), 90)
+            # West Wall
+            self.CreateWall(3, Vector3(0, -offset, 0), 90)
         else:
             print("Error: undefined arena shape: {}".format(self.Shape))
             exit(2)

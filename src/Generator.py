@@ -48,9 +48,10 @@ class Generator:
     def WriteARGoSFile(self):
         templateFile = open('../mission_config_template.argos')
         sourceTemplateFile = Template(templateFile.read())
-        filledFile = sourceTemplateFile.substitute(missionDescription=self.Mission.GetDescription(), lightsDescription=self.Mission.GetLightsDescription(), arenaDescription=self.Mission.GetArenaDescription())
+        filledFile = sourceTemplateFile.substitute(missionDescription=self.Mission.GetDescription(), lightsDescription=self.Mission.GetLightsDescription(), arenaDescription=self.Mission.GetArenaDescription(), obstaclesDescription=self.Mission.GetObstaclesDescription())
 
         print(self.Mission.GetArenaDescription())
+        print(self.Mission.GetObstaclesDescription())
 
         outputFile = open("../mission_config.argos", 'w')
         outputFile.write(filledFile)
@@ -153,13 +154,15 @@ class Generator:
     def HandleObstacle(self, obst_variables, obst_index):
         print("----- OBSTACLE {} ------".format(obst_index))
         if (self.IsConditionRespected(obst_variables[0])):
+            currentObstacle = Box()
             for variable in obst_variables:
                 if self.IsConditionRespected(variable):
-                    currentObstacle = Box()
                     currentObstacle.Type = "obstacle"
                     currentObstacle.Index = obst_index
-                    if "size" in variable.Name:
+                    if 'size' in variable.Name:
                         currentObstacle.Length = self.SampleVariable(variable)
+                    elif 'ori' in variable.Name:
+                        currentObstacle.Orientation.X = self.SampleVariable(variable)
                     elif 'dist' in variable.Name:
                         currentObstacle.Distribution = self.SampleVariable(variable)
                     elif 'sep' in variable.Name:

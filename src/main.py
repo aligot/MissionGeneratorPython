@@ -3,6 +3,8 @@
 from __future__ import print_function
 from ConfigurationParser import ConfigurationParser
 from Generator import Generator
+from Box import Box
+from Vector3 import Vector3
 
 import sys
 import random
@@ -25,5 +27,11 @@ if __name__ == "__main__":
 
     missionGenerator = Generator(listConfigurationParameters)
     missionGenerator.Sample()
+
+    box = Box()
+    box.Length = 0.50
+    box.Position = Vector3(0, 0, 0)
+    box.Orientation = Vector3(90, 0, 0)
+    box.GetBoundingBox()
 
     sys.exit(1)
