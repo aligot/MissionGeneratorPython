@@ -1,6 +1,8 @@
 # coding: utf-8
 
 import random
+import math
+
 from decimal import Decimal
 from collections import OrderedDict
 from Vector3 import Vector3, Distance
@@ -35,6 +37,8 @@ class Mission:
         arena.GenerateWalls()
 
     def AddLight(self, light):
+        self.PositionLight(light)
+        light.Index = len(self.ListLights)
         self.ListLights.append(light)
 
     def AddPatch(self, patch):
@@ -44,6 +48,7 @@ class Mission:
     def AddObstacle(self, obstacle):
         # The position of the patch needs to be specified.
         self.PositionObstacle(obstacle)
+        obstacle.Index = len(self.ListObstacles)
         self.ListObstacles.append(obstacle)
 
     def GetPossiblePatchColors(self, index_variable):
@@ -67,48 +72,35 @@ class Mission:
             obstaclesDescription += obstacle.GetARGoSDescription() + '\n'
         return obstaclesDescription
 
-    def PositionPatch(self, patch):
-        numberTries = 0
-        boolPositioned = False
-        minMaxPositionValues = self.Arena.GetMinMaxPositionValues()
-        if patch.Distribution == 'unif':
-            while numberTries <= 100 and not(boolPositioned):
-                posX = float(round(Decimal(random.uniform(minMaxPositionValues[0], minMaxPositionValues[1])), 2))
-                posY = float(round(Decimal(random.uniform(minMaxPositionValues[0], minMaxPositionValues[1])), 2))
-                if self.Arena.IsWithinArena(posX, posY) and not(self.IsIntersectingWithOtherPatches(patch, posX, posY)):
-                    boolPositioned = True
-                    patch.Position = Vector3(posX, posY, 0)
-                numberTries += 1
-            if not(boolPositioned):
-                print("Error: could not position patch #{}".format(patch.Index))
-                exit(2)
-        elif patch.Distribution == 'relation':
-            while numberTries <= 100 and not(boolPositioned):
-                patchRelated = random.choice(self.ListPatches)
-                relatedPosition = patchRelated.Position
-                side = random.choice(['North', 'East', 'South', 'West'])
-                if side == 'North':  # Coord x is fixed, y can only increase
-                    posX = relatedPosition.X
-                    posY = float(round(Decimal(random.uniform(relatedPosition.Y, minMaxPositionValues[1])), 2))
-                elif side == 'East':  # Coord y is fixed, x can only increase
-                    posX = float(round(Decimal(random.uniform(relatedPosition.X, minMaxPositionValues[1])), 2))
-                    posY = relatedPosition.Y
-                elif side == 'South':  # Coord x is fixed, y can only decrease
-                    posX = relatedPosition.X
-                    posY = float(round(Decimal(random.uniform(minMaxPositionValues[0], relatedPosition.Y)), 2))
-                elif side == 'West':  # Coord y is fixed, x can only decrease
-                    posX = float(round(Decimal(random.uniform(relatedPosition.X, minMaxPositionValues[1])), 2))
-                    posY = relatedPosition.Y
-                if self.Arena.IsWithinArena(posX, posY) and not(self.IsIntersectingWithOtherPatches(patch, posX, posY)):
-                    print(side, posX, posY)
-                    boolPositioned = True
-                    patch.Position = Vector3(posX, posY, 0)
-                numberTries += 1
-            if not(boolPositioned):
-                print("Error: could not position patch #{}".format(patch.Index))
-                exit(2)
+    def PositionLight(self, light):
+        distanceCenter = 0.25
+        heightLight = 0.4
+        if self.Arena.Shape == 'dodeca':
+            inradiusDodecArena = (math.sqrt(6) + math.sqrt(2)) * self.Arena.SideLength / 2
+            distanceCenter += inradiusDodecArena
+        elif self.Arena.Shape == 'square':
+            distanceCenter += self.Arena.SideLength / 2
+        if light.Status == 'on':
+            if self.Arena.Shape == 'dodeca':
+                if light.Position == "north":
+                    light.Coordinates = Vector3(distanceCenter, 0.0, heightLight)
+                elif light.Position == "east":
+                    light.Coordinates = Vector3(0.0, -distanceCenter, heightLight)
+                elif light.Position == "south":
+                    light.Coordinates = Vector3(-distanceCenter, 0.0, heightLight)
+                elif light.Position == "west":
+                    light.Coordinates = Vector3(0.0, distanceCenter, heightLight)
+            elif self.Arena.Shape == 'square':
+                if light.Position == "north":
+                    light.Coordinates = Vector3(distanceCenter, distanceCenter, heightLight)
+                elif light.Position == "east":
+                    light.Coordinates = Vector3(-distanceCenter, -distanceCenter, heightLight)
+                elif light.Position == "south":
+                    light.Coordinates = Vector3(-distanceCenter, -distanceCenter, heightLight)
+                elif light.Position == "west":
+                    light.Coordinates = Vector3(distanceCenter, distanceCenter, heightLight)
         else:
-            print("Error: distribution {} unknown!".format(patch.Distribution))
+            light.Coordinates = Vector3(distanceCenter, 0, -heightLight)
 
     def PositionObstacle(self, obstacle):
         numberTries = 0
@@ -125,12 +117,23 @@ class Mission:
             if not(boolPositioned):
                 print("Error: could not position patch #{}".format(obstacle.Index))
                 exit(2)
-        elif obstacle.Distribution == 'relation':
+        elif obstacle.Distribution == 'side':
             while numberTries <= 100 and not(boolPositioned):
+                squarePatches = []
+                for patch in self.ListPatches:
+                    if patch.Type == 'rect':
+                        squarePatches.append(patch)
+                randomPatch = random.choice(squarePatches)
+                obstacle.Length = randomPatch.Size
+                obstacle.Position.Y = randomPatch.Position.Y
+                obstacle.Position.X = randomPatch.Position.X + randomPatch.Size/2 + obstacle.Width/2
                 numberTries += 1
+                boolPositioned = True
             if not(boolPositioned):
                 print("Error: could not position obstacle #{}".format(obstacle.Index))
                 exit(2)
+        elif obstacle.Distribution == 'between':
+            pass
         else:
             print("Error: distribution {} unknown!".format(obstacle.Distribution))
 

@@ -36,14 +36,24 @@ class ConfigurationParser:
                 name, label, type, range, distribution = 'NA', 'NA', 'NA', 'NA', 'NA'
                 strVariableDescription, strConditionDescription = re.split(r'\|', strLine)
                 strVariableDescription = re.sub(' +', ' ', strVariableDescription)
-                vecConditionDescription = re.split(',', re.sub(' +', '', strConditionDescription))
+                vecConditionDescription = re.split('and', re.sub(' +', '', strConditionDescription))
                 vecVariableDescription = re.split(' ', strVariableDescription)
-                if len(vecVariableDescription) == 4:
-                    name, label, type, range = re.split(' ', strVariableDescription)[0:4]
-                elif len(vecVariableDescription) == 5:
-                    name, label, type, range, distribution = re.split(' ', strVariableDescription)[0:5]
+                if len(vecVariableDescription) == 5:  # 4 variables + ''
+                    name, label, type, range = vecVariableDescription[0:4]
+                elif len(vecVariableDescription) == 6:  # 5 variables + ''
+                    name, label, type, range, distribution = vecVariableDescription[0:5]
                 cCurrentVariable = ConfigurationVariable(name, label, type, range, distribution, vecConditionDescription)
                 self.m_listConfigurationVariable.append(cCurrentVariable)
         return self.m_listConfigurationVariable
+
+    def check(self):
+        for variable in self.m_listConfigurationVariable:
+            if variable.Type == 'categorical' and variable.Distribution != 'NA':
+                if len(variable.Range) != len(variable.Distribution):
+                    print("Error in variable {}: mismatch in length of possible values and distribution".format(variable.Name))
+                    exit(1)
+                elif (sum(variable.Distribution) != 1.0):
+                    print("Error in variable {}: distribution values does not sum to 1".format(variable.Name))
+                    exit(1)
 
     configuration_file = property(_get_configuration_file, _set_configuration_file)

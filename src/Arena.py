@@ -3,6 +3,7 @@
 import mpmath as mp
 import copy
 from decimal import Decimal
+
 from Vector3 import Vector3, Distance
 from EnvironmentalObject import EnvironmentalObject
 from Box import Box

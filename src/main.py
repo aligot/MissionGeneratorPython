@@ -24,6 +24,7 @@ if __name__ == "__main__":
     cConfigurationParser = ConfigurationParser()
     cConfigurationParser.configuration_file = cArguments.paramsFile
     listConfigurationParameters = cConfigurationParser.parse()
+    cConfigurationParser.check()
 
     missionGenerator = Generator(listConfigurationParameters)
     missionGenerator.Sample()

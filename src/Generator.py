@@ -2,6 +2,7 @@
 
 import re
 import random
+from numpy import cumsum
 from decimal import Decimal
 from string import Template
 
@@ -24,9 +25,12 @@ class Generator:
         self.HandleArena()
         while len(self.ConfigurationVariables) > 0:
             variable = self.ConfigurationVariables[0]
-            if "PatchFor" in variable.Name:
+            if "Nest" in variable.Name:  # Foraging Nest; to be handled as a non-regular patch
+                currentObjectVariables = [x for x in self.ConfigurationVariables if ('Nest' in x.Name)]
+                self.HandleForagingNests(currentObjectVariables)
+            elif "FS" in variable.Name:  # Foraging FoodSource; to be handled as a regular patch
                 currentPatchIndex = int(re.findall(r'\d', variable.Name)[0])
-                currentPatchVariables = [x for x in self.ConfigurationVariables if (('PatchFor' in x.Name) and (int(re.findall(r'\d', x.Name)[0]) == currentPatchIndex))]
+                currentPatchVariables = [x for x in self.ConfigurationVariables if (('FS' in x.Name) and (int(re.findall(r'\d', x.Name)[0]) == currentPatchIndex))]
                 self.HandlePatch(currentPatchVariables, currentPatchIndex)
             elif "PatchAgg" in variable.Name:
                 pass
@@ -42,6 +46,7 @@ class Generator:
                 if self.IsConditionRespected(variable):
                     self.InitializeVariable(variable)
                 self.ConfigurationVariables.remove(variable)
+        print(self.Mission.PrintDictionary())
         print(self.Mission.GetDescription())
         self.WriteARGoSFile()
 
@@ -50,8 +55,8 @@ class Generator:
         sourceTemplateFile = Template(templateFile.read())
         filledFile = sourceTemplateFile.substitute(missionDescription=self.Mission.GetDescription(), lightsDescription=self.Mission.GetLightsDescription(), arenaDescription=self.Mission.GetArenaDescription(), obstaclesDescription=self.Mission.GetObstaclesDescription())
 
-        print(self.Mission.GetArenaDescription())
-        print(self.Mission.GetObstaclesDescription())
+        # print(self.Mission.GetArenaDescription())
+        # print(self.Mission.GetObstaclesDescription())
 
         outputFile = open("../mission_config.argos", 'w')
         outputFile.write(filledFile)
@@ -61,16 +66,19 @@ class Generator:
         if variable.Condition[0] == 'NA':
             return True
         else:
+            respected = True
             for condition in variable.Condition:
-                if re.findall('==', condition):
-                    key, value = re.split('==', condition)
-                    return True if self.Mission.IsInstanciated(key, value) else False
-                elif re.findall('>', condition):
-                    key, value = re.split('>', condition)
-                    return True if self.Mission.IsGreaterThan(key, value) else False
-                elif re.findall('!=', condition):
-                    key, value = re.split('!=', condition)
-                    return True if self.Mission.IsDifferent(key, value) else False
+                if (respected):
+                    if re.findall('==', condition):
+                        key, value = re.split('==', condition)
+                        respected = True if self.Mission.IsInstanciated(key, value) else False
+                    elif re.findall('>', condition):
+                        key, value = re.split('>', condition)
+                        respected = True if self.Mission.IsGreaterThan(key, value) else False
+                    elif re.findall('!=', condition):
+                        key, value = re.split('!=', condition)
+                        respected = True if self.Mission.IsDifferent(key, value) else False
+            return respected
 
     def InitializeVariable(self, variable):
         if variable.Type == 'categorical':
@@ -102,38 +110,54 @@ class Generator:
         arena = Arena()
         arenaVariables = [x for x in self.ConfigurationVariables if re.findall('arena', x.Name)]
         for variable in arenaVariables:
-            if variable.Name == 'arenaSide':
-                arena.SetSideLength(self.SampleVariable(variable))
-            elif variable.Name == 'arenaShape':
-                arena.SetShape(self.SampleVariable(variable))
-            elif variable.Name == 'arenaFloorCol':
-                arena.SetFloorColor(self.SampleVariable(variable))
-            else:
-                print("Error: unknown variable Arena variable name {}".format(variable.Name))
-                exit(2)
+            if self.IsConditionRespected(variable):
+                if variable.Name == 'arenaSide':
+                    arena.SetSideLength(self.SampleVariable(variable))
+                    self.Mission.AddVariable(variable.Name, arena.SideLength)
+                elif variable.Name == 'arenaShape':
+                    arena.SetShape(self.SampleVariable(variable))
+                    self.Mission.AddVariable(variable.Name, arena.Shape)
+                elif variable.Name == 'arenaFloorCol':
+                    arena.SetFloorColor(self.SampleVariable(variable))
+                    self.Mission.AddVariable(variable.Name, arena.FloorColor)
+                else:
+                    print("Error: unknown variable Arena variable name {}".format(variable.Name))
+                    exit(2)
         self.Mission.SetArena(arena)
         for variable in arenaVariables:
             self.ConfigurationVariables.remove(variable)
 
+    def HandleForagingNests(self, nests_variables):
+        if self.IsConditionRespected(nests_variables[0]):
+            for variable in nests_variables:
+                if self.IsConditionRespected(variable):
+                    self.InitializeVariable(variable)
+                self.ConfigurationVariables.remove(variable)
+            self.Mission.InitializeNests()
+
     def HandlePatch(self, patch_variables, index):
         if self.IsConditionRespected(patch_variables[0]):
             currentPatch = Patch()
-            currentPatch.Index = index
             for variable in patch_variables:
                 if self.IsConditionRespected(variable):
                     if 'type' in variable.Name:
                         currentPatch.Type = self.SampleVariable(variable)
+                        self.Mission.AddVariable(variable.Name, currentPatch.Type)
                     elif 'color' in variable.Name:
                         if variable.Range != 'SelectColor()':
                             currentPatch.Color = self.SampleVariable(variable)
                         else:
                             currentPatch.Color = self.SamplePossibleValues(variable, self.Mission.GetPossiblePatchColors(index))
+                        self.Mission.AddVariable(variable.Name, currentPatch.Color)
                     elif 'dim' in variable.Name:
                         currentPatch.Size = self.SampleVariable(variable)
+                        self.Mission.AddVariable(variable.Name, currentPatch.Size)
                     elif 'dist' in variable.Name:
                         currentPatch.Distribution = self.SampleVariable(variable)
+                        self.Mission.AddVariable(variable.Name, currentPatch.Distribution)
                     elif 'sep' in variable.Name:
                         currentPatch.RelationDistance = self.SampleVariable(variable)
+                        self.Mission.AddVariable(variable.Name, currentPatch.RelationDistance)
             self.Mission.AddPatch(currentPatch)
         for variable in patch_variables:
             self.ConfigurationVariables.remove(variable)
@@ -147,6 +171,7 @@ class Generator:
                     self.Mission.AddVariable(variable.Name, light.Status)
                 elif variable.Name == "lightPos":
                     light.Position = self.SampleVariable(variable)
+                    self.Mission.AddVariable(variable.Name, light.Position)
         self.Mission.AddLight(light)
         for variable in light_variables:
             self.ConfigurationVariables.remove(variable)
@@ -158,13 +183,15 @@ class Generator:
             for variable in obst_variables:
                 if self.IsConditionRespected(variable):
                     currentObstacle.Type = "obstacle"
-                    currentObstacle.Index = obst_index
                     if 'size' in variable.Name:
                         currentObstacle.Length = self.SampleVariable(variable)
+                        self.Mission.AddVariable(variable.Name, currentObstacle.Length)
                     elif 'ori' in variable.Name:
                         currentObstacle.Orientation.X = self.SampleVariable(variable)
+                        self.Mission.AddVariable(variable.Name, currentObstacle.Orientation.X)
                     elif 'dist' in variable.Name:
                         currentObstacle.Distribution = self.SampleVariable(variable)
+                        self.Mission.AddVariable(variable.Name, currentObstacle.Distribution)
                     elif 'sep' in variable.Name:
                         currentObstacle.RelationDistance = self.SampleVariable(variable)
             self.Mission.AddObstacle(currentObstacle)
@@ -174,7 +201,10 @@ class Generator:
     def SampleVariable(self, variable):
         if variable.Type == 'categorical':
             if type(variable.Range) is tuple:
-                return(random.choice(variable.Range))
+                if variable.Distribution == "NA":
+                    return(random.choice(variable.Range))
+                else:
+                    return(self.WeightedChoice(variable.Range, variable.Distribution))
             else:
                 return(variable.Range)
         elif variable.Type == 'integer':
@@ -188,3 +218,8 @@ class Generator:
             return(random.choice(possible_values))
         else:
             return(possible_values)
+
+    def WeightedChoice(self, possible_values, weights):
+        cumulativeSum = cumsum(weights)
+        index = sum(cumulativeSum < random.random())
+        return possible_values[index]

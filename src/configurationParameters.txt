@@ -1,56 +1,71 @@
 # Comment: everything after # should be disregarded by the parser
-mission         --m       categorical   ('for')    | NA
+mission         --m       categorical   ('for','agg')   (0.9,0.1) | NA
 expLength       --el      categorical   (60,90,120,150,180)      | NA
 robots          --r       integer       (15,25)                     | NA
-arenaShape      --ash     categorical   ('dodeca','square')    (50,50)     | NA
+arenaShape      --ash     categorical   ('dodeca','square')    (0.0,1.0)     | NA
 arenaSide       --asi     real          (0.66,0.66)                  | arenaShape == 'dodeca'
 arenaSide       --asi     real          (2.5,2.5)                  | arenaShape == 'square'
-arenaFloorCol   --afc      categorical   ('gray')   | NA
+arenaFloorCol   --afc     categorical   ('gray')   | NA
 initOrient      --io      categorical   ('uniform')         | NA
 initPosit       --ip      categorical   ('area','all')            | NA
-light           --l       categorical   ('on','off')           | mission == 'for'
+light           --l       categorical   ('on','off')      (0.85,0.15)     | mission == 'for'
 light           --l       categorical   ('on','off')           | mission == 'agg'
-lightPos        --lp      categorical   ('north','east','south','west') | light == 'on'
+lightPos        --lp      categorical   ('east','west')        | light == 'on' and mission == 'for'
+lightPos        --lp      categorical   ('north','east','south','west')        | light == 'on' and mission == 'agg'
 ### Foraging
+numberNests        --nn         categorical       (1,2)             (0.75,0.25) | mission == 'for'
 colorNest          --cnf        categorical       ('white','black')      | mission == 'for'
-nPatchesFor        --npf        integer           (2,3)                  | mission == 'for'
-typePatchFor0      --tpf0       categorical       ('circ','rect')        | nPatchesFor > 0
-colorPatchFor0     --cpf0       categorical       ('white','black')      | nPatchesFor > 0
-dimPatchFor0       --dpf0       real              (0.2,0.6)              | nPatchesFor > 0
-distPatchFor0      --dispf0     categorical       ('unif')               | nPatchesFor > 0
-typePatchFor1      --tpf1       categorical       ('circ','rect')        | nPatchesFor > 1
-colorPatchFor1     --cpf1       function          SelectColor()          | nPatchesFor > 1
-dimPatchFor1       --dpf1       real              (0.2,0.6)              | nPatchesFor > 1
-distPatchFor1      --dispf1     categorical       ('unif','relation')    | nPatchesFor > 1
-sepPatchFor1       --spf1       real              (0.0,0.5)              | posPatchFor1 == 'relation'
-typePatchFor2      --tpf2       categorical       ('circ','rect')        | nPatchesFor > 2
-colorPatchFor2     --cpf2       function          SelectColor()          | nPatchesFor > 2
-dimPatchFor2       --dpf2       real              (0.2,0.6)              | nPatchesFor > 2
-distPatchFor2      --dispf2     categorical       ('unif','relation')    | nPatchesFor > 2
-sepPatchFor2       --spf2       real              (0.0,0.5)              | posPatchFor2 == 'relation'
+widthNest0         --wn0        categorical       (0.3,0.45,0.6)         | numberNests > 0
+widthNest1         --wn1        categorical       (0.3,0.45,0.6)         | numberNests > 1
+numberFoodSource   --nfs        categorical       (1,2,3)           (0.50,0.35,0.15)     | mission == 'for'
+typeFS0            --tfs0       categorical       ('circ','rect')        | numberFoodSource > 0
+colorFS0           --cfs0       categorical       ('white')      | numberFoodSource > 0 and colorNest == 'black'
+colorFS0           --cfs0       categorical       ('black')      | numberFoodSource > 0 and colorNest == 'white'
+dimFS0             --dfs0       categorical       (0.15,0.30)     (0.6,0.4)         | numberFoodSource > 0 and typeFS0 == 'circ'
+dimFS0             --dfs0       categorical       (0.40,0.60)     (0.6,0.4)         | numberFoodSource > 0 and typeFS0 == 'rect'
+distFS0            --distfs0    categorical       ('unif')               | numberFoodSource > 0
+typeFS1      --tfs1       categorical       ('circ','rect')        | numberFoodSource > 1
+colorFS1      --cfs1       categorical       ('white')      | numberFoodSource > 1 and colorNest == 'black'
+colorFS1      --cfs1       categorical       ('black')      | numberFoodSource > 1 and colorNest == 'white'
+dimFS1       --dfs1        categorical       (0.15,0.30)     (0.6,0.4)         | numberFoodSource > 1  and typeFS1 == 'circ'
+dimFS1       --dfs1       categorical       (0.40,0.60)     (0.6,0.4)         | numberFoodSource > 1 and typeFS1 == 'rect'
+distFS1      --distfs1     categorical       ('unif','relation')    | numberFoodSource > 1
+sepFS1       --sepfs1      categorical       (0.3,0.5)              | distFS1 == 'relation'
+typeFS2      --tpf2       categorical       ('circ','rect')        | numberFoodSource > 2
+colorFS2     --cfs2       categorical       ('white')              | numberFoodSource > 2 and colorNest == 'black'
+colorFS2     --cfs2       categorical       ('black')              | numberFoodSource > 2 and colorNest == 'white'
+dimFS2       --dfs2       categorical       (0.15,0.30)     (0.6,0.4)   | numberFoodSource > 2  and typeFS2 == 'circ'
+dimFS2       --dfs2       categorical       (0.40,0.60)     (0.6,0.4)      | numberFoodSource > 0 and typeFS2 == 'rect'
+distFS2      --dispf2     categorical       ('unif','relation')    | numberFoodSource > 2
+sepFS2       --spf2       categorical       (0.3,0.5)              | distFS2 == 'relation'
 ### Aggregation
 nPatchesAgg        --npa        integer            (0,3)                 |  mission == 'agg'
 ### DirectionalGate
 nPatchesDg         --npdg       integer            (2,3)                 |  mission == 'dg'
 ### Obstacles
-nObstacles        --no          integer            (0,5)                 | mission != 'dg'
-nObstacles        --no          integer            (3,5)                 | mission == 'dg'
-sizeObs0          --so0         real               (0.05,0.80)           | nObstacles > 0
-oriObs0           --oo0         categorical        (0,90)                | nObstacles > 0
-distObs0          --do0         categorical        ('unif')              | nObstacles > 0
+nObstacles        --no          integer            (0,5)                          | mission != 'dg'
+nObstacles        --no          integer            (3,5)                          | mission == 'dg'
+distObs0          --do0         categorical        ('unif','side')     (0.3,0.7)  | nObstacles > 0
+sizeObs0          --so0         categorical        (0.05,0.40,0.60)               | nObstacles > 0 and distObs0 == 'unif'
+oriObs0           --oo0         categorical        (0)                            | nObstacles > 0 and arenaShape == 'dodeca' and distObs0 == 'unif'
+oriObs0           --oo0         categorical        (45)                           | nObstacles > 0 and arenaShape == 'square' and distObs0 == 'unif'
 sizeObs1          --so1         real               (0.05,0.80)           | nObstacles > 1
-oriObs1           --oo1         categorical        (0,90)                | nObstacles > 1
-distObs1          --do1         categorical        ('unif','relation')   | nObstacles > 1
+oriObs1           --oo1         categorical        (0)                | nObstacles > 1 and arenaShape == 'dodeca'
+oriObs1           --oo1         categorical        (45)                | nObstacles > 1 and arenaShape == 'square'
+distObs1          --do1         categorical        ('unif','side')   | nObstacles > 1
 sepObs1           --so1         real               (0.0,0.5)             | distObs1 == 'relation'
 sizeObs2          --so2         real               (0.05,0.80)           | nObstacles > 2
-oriObs2           --oo2         categorical        (0,90)                | nObstacles > 2
+oriObs2           --oo2         categorical        (0)                | nObstacles > 2 and arenaShape == 'dodeca'
+oriObs2           --oo2         categorical        (45)                | nObstacles > 2 and arenaShape == 'square'
 distObs2          --do2         categorical        ('unif','relation')   | nObstacles > 2
 sepObs2           --so2         real               (0.0,0.5)             | distObs2 == 'relation'
 sizeObs3          --so3         real               (0.05,0.80)           | nObstacles > 3
-oriObs3           --oo3         categorical        (0,90)                | nObstacles > 3
+oriObs3           --oo3         categorical        (0)                | nObstacles > 3 and arenaShape == 'dodeca'
+oriObs3           --oo3         categorical        (45)                | nObstacles > 3 and arenaShape == 'square'
 distObs3          --do3         categorical        ('unif','relation')   | nObstacles > 3
 sepObs3           --so3         real               (0.0,0.5)             | distObs3 == 'relation'
 sizeObs4          --so4         real               (0.05,0.80)           | nObstacles > 4
-oriObs4           --oo4         categorical        (0,90)                | nObstacles > 4
+oriObs4           --oo4         categorical        (0)                | nObstacles > 4 and arenaShape == 'dodeca'
+oriObs4           --oo4         categorical        (45)                | nObstacles > 4 and arenaShape == 'square'
 distObs4          --do4         categorical        ('unif','relation')   | nObstacles > 4
 sepObs4           --so4         real               (0.0,0.5)             | distObs4 == 'relation'

@@ -1,6 +1,7 @@
 # coding: utf-8
 
 from EnvironmentalObject import EnvironmentalObject
+from Vector3 import Vector3
 
 
 class Light(EnvironmentalObject):
@@ -8,12 +9,14 @@ class Light(EnvironmentalObject):
     def __init__(self):
         self.Status = None
         self.Position = None
+        self.Index = None
+        self.Coordinates = Vector3(0, 0, 0)
 
     # def GetLowLevelDescription(self):
     #     return "--l {0} --pl {1} ".format(self.Status, self.Position)
 
     def GetARGoSDescription(self):
-        return "<light id=\"{0}\" position=\"{1}\" orientation=\"0,0,0\" color=\"yellow\" intensity=\"{2}\" medium=\"leds\"/>".format('light', self.GetCoordinates(), self.GetIntensity())
+        return "<light id=\"{0}\" position=\"{1}\" orientation=\"0,0,0\" color=\"yellow\" intensity=\"{2}\" medium=\"leds\"/>".format('light', self.Coordinates, self.GetIntensity())
 
     def GetCoordinates(self):
         if self.Status == 'on':
