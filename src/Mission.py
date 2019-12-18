@@ -147,16 +147,30 @@ class Mission:
                 return boolPositioned
         elif obstacle.Distribution == 'between':
             while numberTries <= self.MaxNumberTries and not(boolPositioned):
+                print(numberTries)
                 twoPatches = []
                 try:
                     twoPatches = random.sample(self.ListPatches, 2)
-                    break
+                    print('Yes')
                 except ValueError:
                     print("Warning: not enough patches in environment, switch from \"between\" to \"unif\" distribution")
                     obstacle.Distribution = 'unif'
-                    self.PositionObstacle(obstacle)
-                obstacle.Position = Middle(twoPatches[0], twoPatches[1])
-                obstacle.Orientation.X = 90 - HorizontalAngle(twoPatches[0], twoPatches[1])
+                    return self.PositionObstacle(obstacle)
+                print('ok')
+                posX = Middle(twoPatches[0].Position, twoPatches[1].Position).X
+                posY = Middle(twoPatches[0].Position, twoPatches[1].Position).Y
+                obstacle.Orientation.X = 90 - HorizontalAngle(twoPatches[0].Position, twoPatches[1].Position)
+                print(posX, posY)
+                if self.Arena.IsObstacleInArena(obstacle, posX, posY):
+                    obstacle.Position = Vector3(posX, posY, 0.0)
+                    boolPositioned = True
+                else:
+                    numberTries += 1
+            if not(boolPositioned):
+                print("Error: could not position obstacle #{}".format(obstacle.Index))
+                exit(2)
+            else:
+                return boolPositioned
         else:
             print("Error: distribution {} unknown!".format(obstacle.Distribution))
 
