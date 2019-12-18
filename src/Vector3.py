@@ -42,3 +42,19 @@ class Vector3:
 
 def Distance(first, second):
     return (first - second).length
+
+
+def Middle(first, second):
+    return Vector3((first.X + second.X)/2, (first.Y + second.Y)/2, (first.Z + second.Z)/2)
+
+
+def HorizontalAngle(first, second):
+    horizontalDiff = math.fabs(first.X - second.X)
+    verticalDiff = math.fabs(first.Y - second.Y)
+    if horizontalDiff == 0.0:
+        if verticalDiff > 0.0:
+            return 90
+        else:
+            return 0
+    else:
+        return math.degrees(math.atan(verticalDiff/horizontalDiff))

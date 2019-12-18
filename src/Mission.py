@@ -5,7 +5,7 @@ import math
 
 from decimal import Decimal
 from collections import OrderedDict
-from Vector3 import Vector3, Distance
+from Vector3 import Vector3, Distance, Middle, HorizontalAngle
 
 
 class Mission:
@@ -15,6 +15,7 @@ class Mission:
         self.ListPatches = []
         self.ListObstacles = []
         self.ListLights = []
+        self.MaxNumberTries = 100
 
     def AddVariable(self, key, value):
         self.DicVariables[key] = value
@@ -47,8 +48,8 @@ class Mission:
 
     def AddObstacle(self, obstacle):
         # The position of the patch needs to be specified.
-        self.PositionObstacle(obstacle)
         obstacle.Index = len(self.ListObstacles)
+        self.PositionObstacle(obstacle)
         self.ListObstacles.append(obstacle)
 
     def GetPossiblePatchColors(self, index_variable):
@@ -107,7 +108,7 @@ class Mission:
         boolPositioned = False
         minMaxPositionValues = self.Arena.GetMinMaxPositionValues()
         if obstacle.Distribution == 'unif':
-            while numberTries <= 100 and not(boolPositioned):
+            while numberTries <= self.MaxNumberTries and not(boolPositioned):
                 posX = float(round(Decimal(random.uniform(minMaxPositionValues[0], minMaxPositionValues[1])), 2))
                 posY = float(round(Decimal(random.uniform(minMaxPositionValues[0], minMaxPositionValues[1])), 2))
                 if self.Arena.IsObstacleInArena(obstacle, posX, posY):  # and not(self.IsBlockingSpace(obstacle, posX, posY)):
@@ -117,23 +118,45 @@ class Mission:
             if not(boolPositioned):
                 print("Error: could not position patch #{}".format(obstacle.Index))
                 exit(2)
+            else:
+                return boolPositioned
         elif obstacle.Distribution == 'side':
-            while numberTries <= 100 and not(boolPositioned):
+            while numberTries <= self.MaxNumberTries and not(boolPositioned):
                 squarePatches = []
                 for patch in self.ListPatches:
                     if patch.Type == 'rect':
                         squarePatches.append(patch)
-                randomPatch = random.choice(squarePatches)
-                obstacle.Length = randomPatch.Size
-                obstacle.Position.Y = randomPatch.Position.Y
-                obstacle.Position.X = randomPatch.Position.X + randomPatch.Size/2 + obstacle.Width/2
-                numberTries += 1
-                boolPositioned = True
+                if len(squarePatches) > 0:
+                    randomPatch = random.choice(squarePatches)
+                    obstacle.Length = randomPatch.Size
+                    posY = randomPatch.Position.Y
+                    posX = randomPatch.Position.X + randomPatch.Size/2 + obstacle.Width/2
+                    if self.Arena.IsObstacleInArena(obstacle, posX, posY):
+                        obstacle.Position = Vector3(posX, posY, 0.0)
+                        boolPositioned = True
+                    else:
+                        numberTries += 1
+                else:
+                    print("Warning: no rectangular patches in environment, switch from \"side\" to \"between\" distribution")
+                    obstacle.Distribution = 'between'
+                    return self.PositionObstacle(obstacle)
             if not(boolPositioned):
                 print("Error: could not position obstacle #{}".format(obstacle.Index))
                 exit(2)
+            else:
+                return boolPositioned
         elif obstacle.Distribution == 'between':
-            pass
+            while numberTries <= self.MaxNumberTries and not(boolPositioned):
+                twoPatches = []
+                try:
+                    twoPatches = random.sample(self.ListPatches, 2)
+                    break
+                except ValueError:
+                    print("Warning: not enough patches in environment, switch from \"between\" to \"unif\" distribution")
+                    obstacle.Distribution = 'unif'
+                    self.PositionObstacle(obstacle)
+                obstacle.Position = Middle(twoPatches[0], twoPatches[1])
+                obstacle.Orientation.X = 90 - HorizontalAngle(twoPatches[0], twoPatches[1])
         else:
             print("Error: distribution {} unknown!".format(obstacle.Distribution))
 

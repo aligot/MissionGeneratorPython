@@ -4,11 +4,13 @@ from __future__ import print_function
 from ConfigurationParser import ConfigurationParser
 from Generator import Generator
 from Box import Box
-from Vector3 import Vector3
+from Vector3 import Vector3, HorizontalAngle
 
+import re
 import sys
 import random
 import argparse
+import datetime
 
 
 cArgumentParser = argparse.ArgumentParser(description="Generator of missions")
@@ -20,6 +22,12 @@ if __name__ == "__main__":
 
     if cArguments.seed != 0:
         random.seed(cArguments.seed)
+        print("Using given seed {}".format(cArguments.seed))
+    else:
+        time = datetime.datetime.now()
+        seed = int(re.split(r'\.', str(time))[1])
+        random.seed(seed)
+        print("Using random seed {}".format(seed))
 
     cConfigurationParser = ConfigurationParser()
     cConfigurationParser.configuration_file = cArguments.paramsFile
@@ -28,11 +36,11 @@ if __name__ == "__main__":
 
     missionGenerator = Generator(listConfigurationParameters)
     missionGenerator.Sample()
-
-    box = Box()
-    box.Length = 0.50
-    box.Position = Vector3(0, 0, 0)
-    box.Orientation = Vector3(90, 0, 0)
-    box.GetBoundingBox()
+    #
+    # box = Box()
+    # box.Length = 0.50
+    # box.Position = Vector3(0, 0, 0)
+    # box.Orientation = Vector3(90, 0, 0)
+    # box.GetBoundingBox()
 
     sys.exit(1)

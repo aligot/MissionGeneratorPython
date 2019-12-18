@@ -43,10 +43,11 @@ nPatchesAgg        --npa        integer            (0,3)                 |  miss
 ### DirectionalGate
 nPatchesDg         --npdg       integer            (2,3)                 |  mission == 'dg'
 ### Obstacles
-nObstacles        --no          integer            (0,5)                          | mission != 'dg'
+nObstacles        --no          integer            (1,1)                          | mission != 'dg'
 nObstacles        --no          integer            (3,5)                          | mission == 'dg'
-distObs0          --do0         categorical        ('unif','side')     (0.3,0.7)  | nObstacles > 0
-sizeObs0          --so0         categorical        (0.05,0.40,0.60)               | nObstacles > 0 and distObs0 == 'unif'
+distObs0          --do0         categorical        ('unif','side','between')     (0.2,0.4,0.4)  | nObstacles > 0
+sizeObs0          --so0         categorical        (0.10,0.40,0.60)            (1.0,0,0)   | nObstacles > 0 and distObs0 == 'unif'
+sizeObs0          --so0         categorical        (0.10,0.40,0.60)            (0.0,0.5,0.5)   | nObstacles > 0 and distObs0 == 'between'
 oriObs0           --oo0         categorical        (0)                            | nObstacles > 0 and arenaShape == 'dodeca' and distObs0 == 'unif'
 oriObs0           --oo0         categorical        (45)                           | nObstacles > 0 and arenaShape == 'square' and distObs0 == 'unif'
 sizeObs1          --so1         real               (0.05,0.80)           | nObstacles > 1
