@@ -159,8 +159,10 @@ class Mission:
                 print('ok')
                 posX = Middle(twoPatches[0].Position, twoPatches[1].Position).X
                 posY = Middle(twoPatches[0].Position, twoPatches[1].Position).Y
-                obstacle.Orientation.X = 90 - HorizontalAngle(twoPatches[0].Position, twoPatches[1].Position)
-                print(posX, posY)
+                obstacle.Orientation.X = HorizontalAngle(twoPatches[0].Position, twoPatches[1].Position)
+                print(twoPatches[0].Position.X, twoPatches[0].Position.Y)
+                print(twoPatches[1].Position.X, twoPatches[1].Position.Y)
+                print(obstacle.Orientation.X)
                 if self.Arena.IsObstacleInArena(obstacle, posX, posY):
                     obstacle.Position = Vector3(posX, posY, 0.0)
                     boolPositioned = True

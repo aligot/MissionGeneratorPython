@@ -49,8 +49,8 @@ def Middle(first, second):
 
 
 def HorizontalAngle(first, second):
-    horizontalDiff = math.fabs(first.X - second.X)
-    verticalDiff = math.fabs(first.Y - second.Y)
+    horizontalDiff = (first.X - second.X)
+    verticalDiff = (first.Y - second.Y)
     if horizontalDiff == 0.0:
         if verticalDiff > 0.0:
             return 90
