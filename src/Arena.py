@@ -91,25 +91,72 @@ class Arena(EnvironmentalObject):
             self.CreateWall(10, Vector3(apothem*cos60, -apothem*cos30, 0), -60)
             # North North East wall
             self.CreateWall(11, Vector3(apothem*cos30, -apothem*cos60, 0), -30)
-        elif self.Shape == 'square':
-            offset = self.SideLength/2
-            # South Wall
-            self.CreateWall(0, Vector3(-offset, 0, 0), 0)
-            # North Wall
-            self.CreateWall(1, Vector3(offset, 0, 0), 0)
+        elif self.Shape == 'hexagon':
+            inradius = self.SideLength/2 * mp.cot(mp.pi/6)
+            cos60 = mp.cos(mp.pi/3)
+            sin60 = mp.sin(mp.pi/3)
+            posY = cos60 * inradius
+            posX = sin60 * inradius
             # East Wall
-            self.CreateWall(2, Vector3(0, offset, 0), 90)
+            self.CreateWall(0, Vector3(0, -inradius, 0), 90)
             # West Wall
-            self.CreateWall(3, Vector3(0, -offset, 0), 90)
+            self.CreateWall(1, Vector3(0, inradius, 0), 90)
+            self.CreateWall(2, Vector3(posX, posY, 0), 30)
+            self.CreateWall(3, Vector3(posX, -posY, 0), -30)
+            self.CreateWall(4, Vector3(-posX, posY, 0), -30)
+            self.CreateWall(5, Vector3(-posX, - posY, 0), 30)
+        elif self.Shape == 'square':
+            inradius = self.SideLength/2
+            cos45 = mp.cos(mp.pi/4)
+            sin45 = mp.sin(mp.pi/4)
+            posX = cos45 * inradius
+            posY = sin45 * inradius
+            # South Wall
+            self.CreateWall(0, Vector3(posX, posY, 0), 45)
+            # North Wall
+            self.CreateWall(1, Vector3(-posX, -posY, 0), 45)
+            # East Wall
+            self.CreateWall(2, Vector3(posX, -posY, 0), -45)
+            # West Wall
+            self.CreateWall(3, Vector3(-posX, posY, 0), -45)
+        elif self.Shape == 'trigon':
+            inradius = self.SideLength/2 * mp.cot(mp.pi/3)
+            cos20 = mp.cos(mp.pi/6)
+            sin20 = mp.sin(mp.pi/6)
+            posX = cos20 * inradius
+            posY = sin20 * inradius
+            # South Wall
+            self.CreateWall(0, Vector3(posY, posX, 0), 60)
+            # North Wall
+            self.CreateWall(1, Vector3(posY, -posX, 0), -60)
+            # East Wall
+            self.CreateWall(2, Vector3(-inradius, 0, 0), 0)
+        elif self.Shape == 'heart':
+            inradius = self.SideLength/2
+            cos45 = mp.cos(mp.pi/4)
+            sin45 = mp.sin(mp.pi/4)
+            posX = cos45 * inradius
+            posY = sin45 * inradius
+            # South Wall
+            self.CreateWall(0, Vector3(-posX, -posY, 0), 45)
+            # North Wall
+            self.CreateWall(1, Vector3(-posX, posY, 0), -45)
+            # East Wall
+            self.CreateWall(2, Vector3(posX/2, posY/2, 0), -45, self.SideLength/2)
+            self.CreateWall(3, Vector3(posX/2, -posY/2, 0), 45, self.SideLength/2)
+            self.CreateWall(4, Vector3(posX/2, self.SideLength/2, 0), 45, self.SideLength/2)
+            self.CreateWall(5, Vector3(posX/2, -posY/2, 0), 45, self.SideLength/2)
         else:
             print("Error: undefined arena shape: {}".format(self.Shape))
             exit(2)
 
-    def CreateWall(self, index, position, orientation):
+    def CreateWall(self, index, position, orientation, length=None):
+        if not(length):
+            length = self.SideLength
         newWall = Box()
         newWall.Type = 'wall'
         newWall.Index = index
-        newWall.Length = self.SideLength
+        newWall.Length = length
         newWall.Height = 0.08
         newWall.Width = 0.01
         newWall.Position = position

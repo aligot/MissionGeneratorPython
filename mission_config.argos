@@ -13,7 +13,7 @@
   <!-- ****************** -->
   <loop_functions library="/home/aligot/Desktop/Arena/experiments-loop-functions/build/loop-functions/Repertoire/libSDBCLoopFunc.so"
    label="generic_loop_func">
-   <params dist_radius="1.2" number_robots="5" mission_description="--m for --el 90 --r 25 --io uniform --ip all --cnf white --cfsf black --np 4 --asi 0.66 --ash dodeca --afc gray --tp0 rect --sp0 2.5500441814031403 --cxp0 0 --cyp0 1.9500441814031402 --cp0 white --tp1 rect --sp1 2.5500441814031403 --cxp1 0 --cyp1 -1.9500441814031402 --cp1 white --tp2 circ --sp2 0.3 --cxp2 -0.1 --cyp2 -0.21 --cp2 black --tp3 circ --sp3 0.15 --cxp3 1.14 --cyp3 -0.21 --cp3 black "/>
+   <params dist_radius="1.2" number_robots="5" mission_description="--m for --el 120 --r 22 --io uniform --ip all --cnf black --cfsf white --np 2 --asi 1.25 --ash hexagon --afc gray --tp0 None --sp0 None --cxp0 0 --cyp0 0 --cp0 black --tp1 None --sp1 None --cxp1 0 --cyp1 0 --cp1 black "/>
   </loop_functions>
 
   <!-- *************** -->
@@ -79,27 +79,20 @@
   <floor id="floor" source="loop_functions" pixels_per_meter="300"/>
 
   <!-- Lights here -->
-  <light id="light" position="0.0, 1.5250220907015701, 0.4" orientation="0,0,0" color="yellow" intensity="5.0" medium="leds"/>
+  <light id="light" position="0, 0, 0" orientation="0,0,0" color="yellow" intensity="5.0" medium="leds"/>
 
 
   <!-- Arena here -->
-  <box id="wall_0" size="0.01,0.66,0.08" movable="false"> <body position="-1.2313432835820894, 0, 0" orientation="0, 0, 0"/> </box>
-<box id="wall_1" size="0.01,0.66,0.08" movable="false"> <body position="1.2313432835820894, 0, 0" orientation="0, 0, 0"/> </box>
-<box id="wall_2" size="0.01,0.66,0.08" movable="false"> <body position="0, 1.2313432835820894, 0" orientation="90, 0, 0"/> </box>
-<box id="wall_3" size="0.01,0.66,0.08" movable="false"> <body position="0, -1.2313432835820894, 0" orientation="90, 0, 0"/> </box>
-<box id="wall_4" size="0.01,0.66,0.08" movable="false"> <body position="-0.615671641791045, -1.06637456436144, 0" orientation="60, 0, 0"/> </box>
-<box id="wall_5" size="0.01,0.66,0.08" movable="false"> <body position="-1.06637456436144, -0.615671641791045, 0" orientation="30, 0, 0"/> </box>
-<box id="wall_6" size="0.01,0.66,0.08" movable="false"> <body position="0.615671641791045, 1.06637456436144, 0" orientation="60, 0, 0"/> </box>
-<box id="wall_7" size="0.01,0.66,0.08" movable="false"> <body position="1.06637456436144, 0.615671641791045, 0" orientation="30, 0, 0"/> </box>
-<box id="wall_8" size="0.01,0.66,0.08" movable="false"> <body position="-0.615671641791045, 1.06637456436144, 0" orientation="-60, 0, 0"/> </box>
-<box id="wall_9" size="0.01,0.66,0.08" movable="false"> <body position="-1.06637456436144, 0.615671641791045, 0" orientation="-30, 0, 0"/> </box>
-<box id="wall_10" size="0.01,0.66,0.08" movable="false"> <body position="0.615671641791045, -1.06637456436144, 0" orientation="-60, 0, 0"/> </box>
-<box id="wall_11" size="0.01,0.66,0.08" movable="false"> <body position="1.06637456436144, -0.615671641791045, 0" orientation="-30, 0, 0"/> </box>
+  <box id="wall_0" size="0.01,1.25,0.08" movable="false"> <body position="0, -1.08253175473055, 0" orientation="90, 0, 0"/> </box>
+<box id="wall_1" size="0.01,1.25,0.08" movable="false"> <body position="0, 1.08253175473055, 0" orientation="90, 0, 0"/> </box>
+<box id="wall_2" size="0.01,1.25,0.08" movable="false"> <body position="0.9375, 0.541265877365274, 0" orientation="30, 0, 0"/> </box>
+<box id="wall_3" size="0.01,1.25,0.08" movable="false"> <body position="0.9375, -0.541265877365274, 0" orientation="-30, 0, 0"/> </box>
+<box id="wall_4" size="0.01,1.25,0.08" movable="false"> <body position="-0.9375, 0.541265877365274, 0" orientation="-30, 0, 0"/> </box>
+<box id="wall_5" size="0.01,1.25,0.08" movable="false"> <body position="-0.9375, -0.541265877365274, 0" orientation="30, 0, 0"/> </box>
 
 
   <!-- Obstacles here -->
-  <box id="obstacle_0" size="0.05,0.6,0.05" movable="false"> <body position="0.0, 0.0, 0.0" orientation="0, 0, 0"/> </box>
-
+  
 
   </arena>
 

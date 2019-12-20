@@ -22,22 +22,20 @@ if __name__ == "__main__":
 
     if cArguments.seed:
         seed = cArguments.seed
-        random.seed(seed)
+        random.seed(int(seed))
         print("Using given seed {}".format(seed))
     else:
         seed = int(re.split(r'\.', str(datetime.datetime.now()))[1])
         random.seed(seed)
         print("Using random seed {}".format(seed))
 
-    print(random.random())
+    cConfigurationParser = ConfigurationParser()
+    cConfigurationParser.configuration_file = cArguments.paramsFile
+    listConfigurationParameters = cConfigurationParser.parse()
+    cConfigurationParser.check()
 
-    # cConfigurationParser = ConfigurationParser()
-    # cConfigurationParser.configuration_file = cArguments.paramsFile
-    # listConfigurationParameters = cConfigurationParser.parse()
-    # cConfigurationParser.check()
-    #
-    # missionGenerator = Generator(listConfigurationParameters)
-    # missionGenerator.Sample()
+    missionGenerator = Generator(listConfigurationParameters)
+    missionGenerator.Sample()
 
 
     sys.exit(1)

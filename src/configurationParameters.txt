@@ -2,9 +2,12 @@
 mission         --m       categorical   ('for','agg')   (0.9,0.1) | NA
 expLength       --el      categorical   (60,90,120,150,180)      | NA
 robots          --r       integer       (15,25)                     | NA
-arenaShape      --ash     categorical   ('dodeca','square')    (1.0,0.0)     | NA
-arenaSide       --asi     real          (0.66,0.66)                  | arenaShape == 'dodeca'
-arenaSide       --asi     real          (2.5,2.5)                  | arenaShape == 'square'
+arenaShape      --ash     categorical   ('dodeca','square','trigon','heart','hexagon')    (0.0,0.0,0.0,0.0,1.0)     | NA
+arenaSide       --asi     real          (0.5,0.5)              | arenaShape == 'dodeca'
+arenaSide       --asi     real          (2,2)                  | arenaShape == 'square'
+arenaSide       --asi     real          (2.75,2.75)            | arenaShape == 'trigon'
+arenaSide       --asi     real          (1.25,1.25)            | arenaShape == 'hexagon'
+arenaSide       --asi     real          (2,2)                  | arenaShape == 'heart'
 arenaFloorCol   --afc     categorical   ('gray')   | NA
 initOrient      --io      categorical   ('uniform')         | NA
 initPosit       --ip      categorical   ('area','all')            | NA
@@ -17,7 +20,7 @@ numberNests        --nn         categorical       (1,2)             (0.75,0.25) 
 colorNest          --cnf        categorical       ('white','black')      | mission == 'for'
 widthNest0         --wn0        categorical       (0.3,0.45,0.6)         | numberNests > 0
 widthNest1         --wn1        categorical       (0.3,0.45,0.6)         | numberNests > 1
-numberFoodSource   --nfs        categorical       (1,2,3)           (0.50,0.35,0.15)     | mission == 'for'
+numberFoodSource   --nfs        categorical       (0,0)           (1.0,0.0)     | mission == 'for'
 typeFS0            --tfs0       categorical       ('circ','rect')        | numberFoodSource > 0
 colorFS0           --cfs0       categorical       ('white')      | numberFoodSource > 0 and colorNest == 'black'
 colorFS0           --cfs0       categorical       ('black')      | numberFoodSource > 0 and colorNest == 'white'
@@ -43,7 +46,7 @@ nPatchesAgg        --npa        integer            (0,3)                 |  miss
 ### DirectionalGate
 nPatchesDg         --npdg       integer            (2,3)                 |  mission == 'dg'
 ### Obstacles
-nObstacles        --no          integer            (1,1)                          | mission != 'dg'
+nObstacles        --no          integer            (0,0)                          | mission != 'dg'
 nObstacles        --no          integer            (3,5)                          | mission == 'dg'
 distObs0          --do0         categorical        ('unif','side','between')     (0.0,0.0,1.0)  | nObstacles > 0
 sizeObs0          --so0         categorical        (0.10,0.40,0.60)            (1.0,0,0)   | nObstacles > 0 and distObs0 == 'unif'
